@@ -2,7 +2,7 @@ import {REHYDRATE} from 'redux-persist/src/constants';
 
 const initState = {
     hydrated: false,
-    title: "Digital Signin Sheet"
+    title: "Family tree"
 };
 
 export default function (state = initState, action) {
