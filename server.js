@@ -4,7 +4,7 @@ let bodyParer = require('body-parser');
 
 const app = express();
 app.use(bodyParer.json({limit: '5000mb'}));
-app.set("port", 80);
+app.set("port", 3000);
 
 
 // Express only serves static assets in production
