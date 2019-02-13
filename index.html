@@ -1,0 +1,339 @@
+	<!-- <!DOCTYPE html> -->
+	<meta charset="utf-8">
+	<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Family Tree</title>
+	</head>
+
+	<style>
+body {
+		font-family: "Lato", sans-serif;
+		transition: background-color .5s;
+	}
+	line {
+		stroke: #ccc;
+	}
+	.node {
+			.width-should-be-edited-by-js;
+		width: 200;
+		height: 150;
+	}
+	.node-connection {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+	.node-div {
+		border-radius: 25px;
+		background-color: white;
+		display: block;
+		margin: 25px auto;
+		.margin-left: 25;
+		.margin-top: 25;
+		border: 2px solid #B19CD9;
+		padding: 20px;
+		width: 100;
+		height: 50;
+		.transform: translate(-10%,0);
+		transition: all 300ms 0s ease;
+	}
+	..node-div:hover {
+		top: -100px;
+		left: -200px;
+		width: 200;
+		height: 100;
+	}
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* aspect ratio */
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+</style>
+
+<!--SideMenu!-->
+<body>
+  <div id="mySidenav" class="sidenav">
+	<a href="javascript:void(0)" class="closebtn" onclick="toggleNav()">&#9776;</a>
+	<div id="links" class="mylinks">
+	  <a href="#">About</a>
+  	  <a href="#">Services</a>
+	  <a href="#">Clients</a>
+	  <a href="#">Contact</a>
+	</div>
+  </div>
+  
+  <div id="main">
+    <svg width="700" height="900">
+	  <g class="objects">
+		<g class="link"></g>
+		<g class="node"></g>
+	  </g>
+    </svg>
+  </div>
+
+  
+	<script>
+	  function toggleNav(){
+		  let mysidenav = document.getElementById("mySidenav").style;
+		  let links = document.getElementById("links").style;
+		  let main = document.getElementById("main").style;
+		  if (mysidenav.shown == true) {
+			  mysidenav.shown = false;
+			  mysidenav.width = "25%";
+			  main.marginLeft = "25%";
+			  links.display = "block";
+		  } else {
+			  mysidenav.shown = true;
+			  mysidenav.width = "10%";
+			  main.marginLeft = "10%";
+			  links.display = "none";
+		  }
+	  }
+
+  </script>	
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+  <script src="./lib/rectCollide.js"></script>	
+  <link rel = "stylesheet" type = "text/css"href = "./lib/sidenav.css" />
+  <script>
+	document.getElementById("mySidenav").style.width = "10%";
+	document.getElementById("main").style.marginLeft= "10%";
+
+const width = 1200, height = 800;
+const nodewidth = 200, nodeheight = 150, nodeoffset = 30;
+const divwidth = 144, divheight = 94;
+// Don't forget to edit .node class of css!!
+
+var numNodes = 100;
+var nodes = [
+	{id:0, label:"Shun", spread:0, depth: 0},
+	{id:1, label:"Wife", spread:2, depth: 0},
+	{id:2, label:"MeWife", spread:1, depth: 0, connection:true},
+	{id:3, label:"Son", spread:0, depth: 1},
+	{id:4, label:"Daughter", spread:0, depth: 1},
+	{id:5, label:"Dad", spread:-1, depth: -1},
+	{id:6, label:"Mom", spread:1, depth: -1},
+	{id:7, label:"DadMom", spread:0, depth: -1, connection:true},
+	{id:8, label:"Grandpa", spread:-1, depth: -2}
+]
+var numid = nodes.length;
+var depth = 4, spread = 3;
+var links = [
+	{id:0, source:0, target:2},
+	{id:1, source:1, target:2},
+	{id:2, source:2, target:3},
+	{id:3, source:2, target:4},
+	{id:4, source:5, target:7},
+	{id:5, source:6, target:7},
+	{id:6, source:7, target:0},
+	{id:7, source:8, target:5},
+]
+
+
+nodes.forEach(function(tmpnode) {
+	tmpnode["width"] = nodewidth;
+	tmpnode["height"] = nodeheight;
+});	  
+
+
+//////////////////////////////////////////////////
+// Set up Layout
+//////////////////////////////////////////////////
+var svg = d3.select("body")
+	.select("svg")
+	.attr("width", width).attr("height", height)
+	.select(".objects");
+var node, link, circle, foreignobj;
+
+var simulation = d3.forceSimulation(nodes)
+	.force('charge', d3.forceManyBody().strength(1))
+	.force('link', d3.forceLink(links)
+		   .id( function(d){return d.id;} )
+		   .distance(0).strength(0.01).iterations(10)
+		  )
+	.force('x', d3.forceX().x(function(d) { return (height/spread) * (spread + d.spread) - 350; }))
+	.force('y', d3.forceY().y(function(d) { return (height/depth) * (depth + d.depth) - 350; }))
+	.force('collision', rectCollide().size(function(d){return [d.width + 10, d.height + 10]}))
+	.force('center', d3.forceCenter(width / 2, height /2))
+	.alphaTarget(1)
+	.on('tick', ticked)
+
+//add drag capabilities 
+var drag_handler = d3.drag()
+	.on("start", drag_start)
+	.on("drag", drag_drag)
+	.on("end", drag_end);	
+
+//add zoom capabilities 
+var zoom_handler = d3.zoom()
+	.on("zoom", zoom_actions);
+zoom_handler(d3.select("svg"));     
+
+restart();
+
+//////////////////////////////////////////////////
+// Methods
+//////////////////////////////////////////////////
+function mousedownNode(d, i){
+	addNode(d,i,this); restart();
+}
+
+function mousedownCircleTop(d, i){ addNode(d, d.depth -1 , d.spread); restart(); }
+function mousedownCircleRight(d, i){ addNode(d, d.depth, d.spread + 2); restart(); }
+function mousedownCircleBottom(d, i){ addNode(d, d.depth + 1, d.spread); restart(); }
+function mousedownCircleLeft(d, i){ addNode(d, d.depth, d.spread - 2); restart(); }
+
+// add Node to the graph
+function addNode(d, depth, spread){
+	var tmpnode = { id: numid, label: "testing", 
+					"height": nodeheight, "width": nodewidth,
+					"spread": spread, "depth": depth
+				  };
+	nodes.push(tmpnode);
+	links.push({ id: numid, source: d, target: numid });
+	numid++;
+}
+
+function removeNode(d, i){
+	// Not only remove, but have to recoonect nodes!!
+	// Shall it reconnect or shall it disconnect??
+}
+
+function mouseoverNode(d, i) {
+	simulation.alpha(0.1);
+	circles = d3.select(this).selectAll("circle")
+		.style("display", "block")
+		.transition()
+		.duration(250)
+		.attr("r", 15)
+		.style("opacity", 1);
+}
+
+function mouseoutNode(d, i) {
+	simulation.alpha(0.1);
+	circles = d3.select(this).selectAll("circle")
+		.transition()
+		.duration(250)
+		.attr("r", 0)
+		.style("opacity", 0)
+		.on("end", function(){
+			d3.select(this).style("display", "none")
+		});
+	;
+}
+
+function restart(){
+	// Link objects
+	link = svg.select(".link").attr("stroke-width", 1.5).selectAll('line')
+		.data(links, function(d) { return d.target.id; });
+	//    Removed links
+	var linkExit = link.exit().remove();
+	//    Added links
+	var linkEnter = link.enter()
+		.append("line")
+	link = linkEnter.merge(link);
+
+
+	// Node objects
+	node = svg.select(".node").selectAll("g")
+		.data(nodes, function(d){ return d.id; });
+	//    Removed nodes
+	var nodeExit = node.exit().remove();
+	//    Added nodes
+	var nodeEnter = node.enter()
+		.append("g")
+		.on("mouseover", mouseoverNode)
+		.on("mouseout", mouseoutNode);
+	nodeEnter
+		.each(function(d){
+			d3.select(this)
+			// ForeignObject (the HTML on top of svg)
+				.append("foreignObject")
+				.call(drag_handler)
+				.attr("id", function(d){ return "node-" + d.id; })
+				.attr("class", function(d){ return (d.connection) ? "node-connection" : "node"; })
+				.append("xhtml:div")
+				.attr("class", function(d){ return (d.connection) ? "node-connection" : "node-div"; })
+				.append("xhtml:h3")
+				.text(function(d){ return (d.connection)? "" : d.label; });
+			// Four circles on sides
+			for (var i = 0; i < 4; i++){
+				d3.select(this)
+					.append("circle")
+					.attr("class", function(d){ return (d.connection) ? "node-connection" : "node-circle-" + i; })
+					.attr("r", 20).attr("fill", "pink")
+					.style("display", "none")
+					.style("opacity", 0)
+			}
+			d3.select(this).select(".node-circle-0").on("mousedown", mousedownCircleLeft);
+			d3.select(this).select(".node-circle-1").on("mousedown", mousedownCircleBottom);
+			d3.select(this).select(".node-circle-2").on("mousedown", mousedownCircleRight);
+			d3.select(this).select(".node-circle-3").on("mousedown", mousedownCircleTop);
+		})
+	node = nodeEnter.merge(node);
+	
+
+	// Add nodes & links in layout
+	simulation.nodes(nodes);
+	simulation.force("link").links(links);
+	simulation.alpha(1).restart();
+}
+
+// Drag functions 
+function drag_start(d) {
+	if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+	d.fx = d.x; d.fy = d.y;
+}
+function drag_drag(d) {
+	d.fx = d3.event.x; d.fy = d3.event.y;
+}
+function drag_end(d) {
+	if (!d3.event.active) simulation.alphaTarget(0);
+	d.fx = null; d.fy = null;
+}
+
+// Zoom functions 
+function zoom_actions(){ d3.select(".objects").attr("transform", d3.event.transform) }
+
+function clone(selector) {
+    var node = d3.select(selector).node();
+    return d3.select(node.parentNode.insertBefore(node.cloneNode(true), node.nextSibling));
+}
+
+// Magically calculates offset of four circles
+var halfW = (i,d) => Math.cos(i * Math.PI / 2) * (nodeoffset - d.width/2) + d.width/2,
+	halfH = (i,d) => Math.cos((i + 1) * Math.PI / 2) * (nodeoffset - d.height/2) + d.height/2;
+
+
+// Tick function
+function ticked() {
+	for (var i = 0; i < 4; i++){
+	node.select(".node-circle-" + i)
+		.attr("cx", function(d) { return d.x + halfW(i,d); })
+		.attr("cy", function(d) { return d.y + halfH(i,d) })
+	}
+	node.select("foreignObject")
+		.attr("x", function(d) { return d.x; })
+		.attr("y", function(d) { return d.y; })
+	link
+		.attr('x1', function(d) { return d.source.x + d.source.width/2  })
+		.attr('y1', function(d) { return d.source.y + d.source.height/2 })
+		.attr('x2', function(d) { return d.target.x + d.target.width/2  })
+		.attr('y2', function(d) { return d.target.y + d.target.height/2 })
+		.attr('source', function(d) { return d.source.label })
+		.attr('target', function(d) { return d.target.label })
+	;
+}
+
+</script>
+</body>
+</html>
