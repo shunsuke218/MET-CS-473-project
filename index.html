@@ -108,7 +108,7 @@ body {
 	document.getElementById("mySidenav").style.width = "10%";
 	document.getElementById("main").style.marginLeft= "10%";
 
-const width = 1200, height = 800;
+const width = 1600, height = 1200;
 const nodewidth = 300, nodeheight = 200, nodeoffset = 30;
 const divwidth = 200, divheight = 150, divoffset = 54;
 // Don't forget to edit .node class of css!!
@@ -118,14 +118,21 @@ var nodes = [
 	{id:0, label:"Shun", spread:0, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true, desc: "this is testing script"},
 	{id:1, label:"Wife", spread:2, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true},
 	{id:2, label:"MeWife", spread:1, depth: 0, connection:true, child:[3,4]},
-	{id:3, label:"Son", spread:0, depth: 1, dob: "2019/1/1", hasSibling: true},
-	{id:4, label:"Daughter", spread:0, depth: 1, dob: "2019/1/1", hasSibling: true},
+	{id:3, label:"Son", spread:1, depth: 1, dob: "2019/1/1", hasSibling: true},
+	{id:4, label:"Daughter", spread:1, depth: 1, dob: "2019/1/1", hasSibling: true},
 	{id:5, label:"Dad", spread:-1, depth: -1, dob: "1969/1/1", hasChild: true, isMarried: true},
 	{id:6, label:"Mom", spread:1, depth: -1, hasChild: true, isMarried: true},
 	{id:7, label:"DadMom", spread:0, depth: -1, connection:true, hasChild: true, child:[0]},
 	{id:8, label:"Grandpa", spread:-1, depth: -2, dob: "1939/1/1", hasChild: true}
 ]
+
+nodes.forEach(function(tmpnode) {
+	tmpnode["width"] = nodewidth;
+	tmpnode["height"] = nodeheight;
+});	  
+
 var numid = nodes.length;
+//var coord = recalculate();
 var depth = 4, spread = 3;
 var links = [
 	{id:0, source:0, target:2},
@@ -139,11 +146,6 @@ var links = [
 ]
 
 
-nodes.forEach(function(tmpnode) {
-	tmpnode["width"] = nodewidth;
-	tmpnode["height"] = nodeheight;
-});	  
-
 
 //////////////////////////////////////////////////
 // Set up Layout
@@ -156,27 +158,27 @@ var node, link, circle, foreignobj;
 
 var simulation = d3.forceSimulation(nodes)
 	.force('charge', d3.forceManyBody()
-		   .strength(1)
+		   .strength(100)
 		   .distanceMax(0)
 		   .distanceMin(0)
 		  )
 	.force('link', d3.forceLink(links)
 		   .id( function(d){return d.id;} )
 		   .distance(0)
-		   .strength(0.01)
+		   .strength(0.1)
 		   //.iterations(1)
 		  )
 	.force("xAxis", d3.forceX(width/2).strength(0))
-	.force("yAxis", d3.forceY(width/2).strength(0))
+	.force("yAxis", d3.forceY(height/2).strength(0))
 	.force('x', d3.forceX()
-		   .x(function(d) { return (height/spread) * (spread + d.spread) - 350; })
+		   .x(function(d) { return (width/spread) * (spread + d.spread) - 350; })
 		   //.strength(1)
 		  )
 	.force('y', d3.forceY()
 		   .y(function(d) { return (height/depth) * (depth + d.depth) - 350; })
 		   //.strength(1)
 		  )
-	.force('collision', rectCollide().size(function(d){return [d.width + 10, d.height + 10]}))
+	.force('collision', rectCollide().size(function(d){return [d.width + 20, d.height + 20]}))
 	.alphaTarget(1)
 	.on('tick', ticked)
 
@@ -322,6 +324,7 @@ function addParent(d, s = 1){
 	mom.isMarried = true; mom.hasChild = true;
 	dad.isMarried = true; dad.hasChild = true;
 
+
 	restart();
 }
 
@@ -348,6 +351,9 @@ function addNode(d, depth, spread, connection = false){
 
 	// Increment counter
 	numid++;
+
+	// Recalculate coordinate
+	recalculate();
 
 	// Return added node
 	return tmpnode;
@@ -387,6 +393,7 @@ function removeNode(d){
 		// The node cannot be deleted
 		console.log("The node cannot be deleted!");
 	}
+	recalculate();
 	restart();
 }
 
@@ -592,6 +599,29 @@ function drag_end(d) {
 // Zoom functions 
 function zoom_actions(){ d3.select(".objects").attr("transform", d3.event.transform) }
 
+// Recalculate coordinate
+function recalculate() {
+	let spread_min = Math.min.apply(Math, nodes.map(function(o){return o.spread})),
+		spread_max = Math.max.apply(Math, nodes.map(function(o){return o.spread})),
+		depth_min = Math.min.apply(Math, nodes.map(function(o){return o.depth})),
+		depth_max = Math.max.apply(Math, nodes.map(function(o){return o.depth}));
+	let spread = Math.abs(spread_max - spread_min),
+		depth = Math.abs(depth_max - depth_min);
+		
+	simulation
+	.force('x', d3.forceX()
+		   .x(function(d) { return (width/spread) * (spread + d.spread) - 350; })
+		   .strength(0.5)
+		  )
+	.force('y', d3.forceY()
+		   .y(function(d) { return (height/depth) * (depth + d.depth) - 350; })
+		   .strength(1)
+		  )
+
+	return [spread, depth];
+}
+
+
 //////////////////////////////////////////////////
 // Special Methods
 //////////////////////////////////////////////////
@@ -660,6 +690,10 @@ function restart(){
 					    // h3 (name)
 						.append("xhtml:h3")
 						.text(function(d){ return d.label; })
+					//div
+					//    // h2 (depth, spread)
+					//	.append("xhtml:h4")
+					//	.text(function(d){ return d.spread + ", " + d.depth; })
 					div
 					    // h2 (dob)
 						.append("xhtml:h4")
@@ -708,6 +742,7 @@ function restart(){
 	// Add nodes & links in layout
 	simulation.nodes(nodes);
 	simulation.force("link").links(links);
+	recalculate();
 	simulation.alpha(1).restart();
 }
 
