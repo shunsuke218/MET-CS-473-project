@@ -5,12 +5,12 @@ let FamilyTree = {
                 <h1>Demo Family Tree here</h1>
                 <div id="main">
                     <svg width="700" height="900">
-                        <g class="objects">
-                            <g class="link"></g>
-                            <g class="node"></g>
-                        </g>
-                    </svg>
-                </div>
+                    <g class="objects">
+                        <g class="link"></g>
+                        <g class="node"></g>
+                    </g>
+                </svg>
+            </div>
             </section>
         `
         return view
@@ -104,7 +104,6 @@ let FamilyTree = {
             .on("zoom", zoom_actions);
         zoom_handler(d3.select("svg"));
 
-        restart();
 
         //////////////////////////////////////////////////
         // Methods
@@ -407,7 +406,7 @@ let FamilyTree = {
                 .attrTween("width", function (d) {
                     let i = d3.interpolate(d.width, nodewidth * 1);
                     return function (t) {
-                    d.width = i(t);
+                        d.width = i(t);
                         return i(t);
                     }
                 })
@@ -415,7 +414,7 @@ let FamilyTree = {
                 .attrTween("height", function (d) {
                     let i = d3.interpolate(d.height, nodeheight * 2);
                     return function (t) {
-                    d.height = i(t);
+                        d.height = i(t);
                         // Recalculate collision box
                         simulation.force('collision', rectCollide()
                             .size(function (d) { return [d.width + 10, d.height + 10] }));
@@ -458,7 +457,7 @@ let FamilyTree = {
                 .attrTween("width", function (d) {
                     let i = d3.interpolate(d.width, nodewidth);
                     return function (t) {
-                    d.width = i(t);
+                        d.width = i(t);
                         return i(t);
                     };
                 })
@@ -466,7 +465,7 @@ let FamilyTree = {
                 .attrTween("height", function (d) {
                     let i = d3.interpolate(d.height, nodeheight);
                     return function (t) {
-                    d.height = i(t);
+                        d.height = i(t);
                         // Recalculate collision box
                         simulation.force('collision', rectCollide()
                             .size(function (d) { return [d.width + 10, d.height + 10] }))
@@ -696,6 +695,8 @@ let FamilyTree = {
                 .attr('y2', function (d) { return d.target.y + d.target.height / 2 })
                 ;
         }
+
+        restart(); // I moved restart here
 
     }
 }
