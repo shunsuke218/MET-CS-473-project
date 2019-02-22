@@ -39,7 +39,7 @@ let Navbar = {
         function handleAuthentication() {
             webAuth.parseHash(function (err, authResult) {
                 if (authResult && authResult.accessToken && authResult.idToken) {
-                    window.location.hash = '/family-tree';
+                    window.location.hash = '/';
                     localLogin(authResult);
                     loginBtn.style.display = 'none';
                     // homeView.style.display = 'inline-block';
@@ -74,12 +74,13 @@ let Navbar = {
             expiresAt = 0;
             displayButtons();
 
-            // let res = await fetch("https://cs473familytree.auth0.com/v2/logout");
-            // let json = await res.json();
-            // console.log(json);
+            webAuth.logout({
+                returnTo: 'http://localhost:5005/',
+                client_id: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi'
+              });
 
-            window.location = "https://cs473familytree.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost:5000"
-            //https://cs473familytree.auth0.com/v2/logout
+            // window.location = "https://cs473familytree.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost:5005/"
+
         }
 
         function renewTokens() {
