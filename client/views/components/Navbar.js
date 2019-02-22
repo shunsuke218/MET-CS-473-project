@@ -1,4 +1,4 @@
-import {getSiteRootFromUrl} from '../../utils/utils.js';
+import { getSiteRootFromUrl } from '../../utils/utils.js';
 
 let Navbar = {
     render: async () => {
@@ -13,23 +13,21 @@ let Navbar = {
     },
     after_render: async () => {
 
+        var lock = new Auth0Lock(
+            'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
+            'cs473familytree.auth0.com'
+        );
+
         var idToken;
         var accessToken;
         var expiresAt;
-
-        var webAuth = new auth0.WebAuth({
-            domain: 'cs473familytree.auth0.com',
-            clientID: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
-            responseType: 'token id_token',
-            scope: 'openid',
-            redirectUri: window.location.href
-        });
 
         var loginBtn = document.getElementById('btn-login');
 
         loginBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            webAuth.authorize();
+            // webAuth.authorize();
+            lock.show();
         });
 
         var logoutBtn = document.getElementById('btn-logout');
@@ -38,22 +36,29 @@ let Navbar = {
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'none';
 
-        function handleAuthentication() {
-            webAuth.parseHash(function (err, authResult) {
-                if (authResult && authResult.accessToken && authResult.idToken) {
-                    window.location.hash = '/';
-                    localLogin(authResult);
-                    loginBtn.style.display = 'none';
-                    // homeView.style.display = 'inline-block';
-                } else if (err) {
-                    // homeView.style.display = 'inline-block';
-                    console.log(err);
-                    alert(
-                        'Error: ' + err.error + '. Check the console for further details.'
-                    );
+        lock.on("authenticated", function (authResult) {
+            localLogin(authResult);
+            loginBtn.style.display = 'none';
+
+            // Use the token in authResult to getUserInfo() and save it to localStorage
+            lock.getUserInfo(authResult.accessToken, function (error, profile) {
+                if (error) {
+                    // Handle error
+                    return;
                 }
+
+                localStorage.setItem('accessToken', authResult.accessToken);
                 displayButtons();
+
             });
+        });
+
+
+
+        function handleAuthentication() {
+
+
+
         }
 
         function localLogin(authResult) {
@@ -79,18 +84,16 @@ let Navbar = {
             // console.log(window.location.href);
             let returnTo = getSiteRootFromUrl(window.location.href);
 
-            webAuth.logout({
-                returnTo,
-                client_id: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi'
-              });
-
-            // window.location = "https://cs473familytree.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost:5005/"
+            // todo
+            lock.logout({
+                returnTo
+            });
 
         }
 
 
         function renewTokens() {
-            webAuth.checkSession({}, (err, authResult) => {
+            lock.checkSession({}, (err, authResult) => {
                 if (authResult && authResult.accessToken && authResult.idToken) {
                     localLogin(authResult);
                 } else if (err) {
@@ -123,9 +126,9 @@ let Navbar = {
 
         if (localStorage.getItem('isLoggedIn') === 'true') {
             renewTokens();
-        } else {
-            handleAuthentication();
-        }
+        } 
+
+        displayButtons();
     }
 
 }
