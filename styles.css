@@ -1,0 +1,58 @@
+body {
+    font-family: "Lato", sans-serif;
+    transition: background-color .5s;
+}
+
+line {
+    stroke: #ccc;
+}
+
+/*.width-should-be-edited-by-js;*/
+.node {
+
+    width: 200px; 
+    /* please put px */
+    height: 150px;
+}
+
+.node-connection {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+.node-div {
+    border-radius: 25px;
+    background-color: white;
+    display: block;
+    margin: 30px 30px 30px 30px;
+    border: 2px solid #B19CD9;
+    padding: 20px;
+    transition: all 250ms 0s ease;
+}
+
+.profilepic {
+    /* please add px */
+    width: 100px;
+    height: 100px;
+    float: left;
+}
+
+.description {}
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    /* aspect ratio */
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
