@@ -1,3 +1,5 @@
+import {getSiteRootFromUrl} from '../../utils/utils.js';
+
 let Navbar = {
     render: async () => {
         let view =  /*html*/`
@@ -74,14 +76,18 @@ let Navbar = {
             expiresAt = 0;
             displayButtons();
 
+            // console.log(window.location.href);
+            let returnTo = getSiteRootFromUrl(window.location.href);
+
             webAuth.logout({
-                returnTo: 'http://localhost:5005/',
+                returnTo,
                 client_id: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi'
               });
 
             // window.location = "https://cs473familytree.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost:5005/"
 
         }
+
 
         function renewTokens() {
             webAuth.checkSession({}, (err, authResult) => {
