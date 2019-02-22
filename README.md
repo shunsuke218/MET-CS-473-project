@@ -9,7 +9,7 @@ This is a web application which creates a user interactive web application that 
 To begin, install git if you have not done doing so:
 https://git-scm.com/downloads
 
-Also, please install Node.js & npm (Need it to start server):
+Install Node.js:
 https://nodejs.org/en/
 
 
@@ -20,22 +20,21 @@ git clone https://github.com/shunsuke218/MET-CS-473-project/
 
 Now the repository should be available in your home directory. 
 
-In order to see it works, you need to install serve with npm. Run the following command to install.
+Now run,
 ```
-npm install -g serve
-```
-
-Once serve is installed, you can launch it by the following command:
-```
-serve .
+cd MET-CS-473-project
+npm i // this is to install the dependencies
+node server // it will run the server
 ```
 
-Now, go to localhost:5000 in your browser. You should be able to see the website in action.
+Go to localhost:5005 in your browser. You should be able to see the website in action.
+
 
 
 ## Built With
 
 * [D3.js](https://d3.js.org/) - JavaScript library to visualize node/link data
+
 
 ## Versioning
 
