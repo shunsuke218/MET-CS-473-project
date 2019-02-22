@@ -29,7 +29,9 @@ node server // it will run the server
 
 Go to localhost:5005 in your browser. You should be able to see the website in action.
 
+## Staging server
 
+The staging server is located at https://cs473testing.stevemu.com
 
 ## Built With
 
