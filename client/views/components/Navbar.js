@@ -3,7 +3,7 @@ import {getSiteRootFromUrl} from '../../utils/utils.js';
 let Navbar = {
     render: async () => {
         let view =  /*html*/`
-             <nav class="navbar">
+             <nav id="navbar">
                 <div>Family Tree</div>
                 <div id="login"><a href="#" id="btn-login">Login</a></div>
                 <div id="logout"><a href="#" id="btn-logout">Log out</div>

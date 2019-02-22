@@ -1,25 +1,8 @@
-body {
-    font-family: "Lato", sans-serif;
-    transition: background-color .5s;
-}
-
-line {
+#family-tree line {
     stroke: #ccc;
 }
 
-/* .node {
-
-    width: 200px; 
-    height: 150px;
-}
-
-.node-connection {
-    display: none;
-    width: 0;
-    height: 0;
-} */
-
-.node-div {
+#family-tree .node-div {
     border-radius: 25px;
     background-color: white;
     display: block;
@@ -29,11 +12,9 @@ line {
     transition: all 250ms 0s ease;
 }
 
-.profilepic {
+#family-tree .profilepic {
     /* please add px */
     width: 100px;
     height: 100px;
     float: left;
 }
-
-.description {}
