@@ -1,4 +1,4 @@
-import {initSvgTree} from './d3Utils.js';
+import { initSvgTree } from './d3Utils.js';
 
 let FamilyTree = {
     render: async () => {
