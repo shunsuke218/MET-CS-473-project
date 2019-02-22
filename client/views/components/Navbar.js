@@ -37,11 +37,15 @@ let Navbar = {
         logoutBtn.style.display = 'none';
 
         lock.on("authenticated", function (authResult) {
+            // console.log(authResult);
             localLogin(authResult);
             loginBtn.style.display = 'none';
 
             // Use the token in authResult to getUserInfo() and save it to localStorage
             lock.getUserInfo(authResult.accessToken, function (error, profile) {
+
+                // console.log(profile);
+
                 if (error) {
                     // Handle error
                     return;
@@ -53,14 +57,6 @@ let Navbar = {
             });
         });
 
-
-
-        function handleAuthentication() {
-
-
-
-        }
-
         function localLogin(authResult) {
             // Set isLoggedIn flag in localStorage
             localStorage.setItem('isLoggedIn', 'true');
@@ -68,6 +64,7 @@ let Navbar = {
             expiresAt = JSON.stringify(
                 authResult.expiresIn * 1000 + new Date().getTime()
             );
+            console.log(expiresAt);
             accessToken = authResult.accessToken;
             idToken = authResult.idToken;
         }
@@ -93,8 +90,11 @@ let Navbar = {
 
 
         function renewTokens() {
+            // console.log('renew');
             lock.checkSession({}, (err, authResult) => {
-                if (authResult && authResult.accessToken && authResult.idToken) {
+                console.log(authResult);
+                if (authResult && authResult.accessToken) {
+                    // console.log(authResult);
                     localLogin(authResult);
                 } else if (err) {
                     alert(
@@ -110,6 +110,7 @@ let Navbar = {
             // Check whether the current time is past the
             // Access Token's expiry time
             var expiration = parseInt(expiresAt) || 0;
+            // console.log(expiresAt);
             return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration;
         }
 
@@ -126,9 +127,11 @@ let Navbar = {
 
         if (localStorage.getItem('isLoggedIn') === 'true') {
             renewTokens();
-        } 
+        } else {
+            displayButtons();
+        }
 
-        displayButtons();
+
     }
 
 }
