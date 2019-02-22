@@ -9,13 +9,9 @@ This is a web application which creates a user interactive web application that 
 To begin, install git if you have not done doing so:
 https://git-scm.com/downloads
 
-Install Node.js:
+Also, please install Node.js & npm (Need it to start server):
 https://nodejs.org/en/
 
-Run:
-```
-npm install -g serve
-```
 
 clone this repository using Terminal or Command Prompt by
 ```
@@ -24,18 +20,22 @@ git clone https://github.com/shunsuke218/MET-CS-473-project/
 
 Now the repository should be available in your home directory. 
 
-Run:
+In order to see it works, you need to install serve with npm. Run the following command to install.
+```
+npm install -g serve
+```
+
+Once serve is installed, you can launch it by the following command:
 ```
 serve .
 ```
 
-Go to localhost:5000 in your browser.
+Now, go to localhost:5000 in your browser. You should be able to see the website in action.
 
 
 ## Built With
 
 * [D3.js](https://d3.js.org/) - JavaScript library to visualize node/link data
-
 
 ## Versioning
 
@@ -46,8 +46,8 @@ For the versions available, see the [tags on this repository](https://github.com
 
 ## Authors
 
-* **Shunsuke Haga** - *Initial work* - [Repo](https://github.com/shunsuke218)
-* **Steve Mu**
+* **Shunsuke Haga** - *Front End* - [Repo](https://github.com/shunsuke218)
+* **Steve Mu**  - *Back End* 
 
 ## License
 
