@@ -12,10 +12,6 @@ https://git-scm.com/downloads
 Install Node.js:
 https://nodejs.org/en/
 
-Run:
-```
-npm install -g serve
-```
 
 clone this repository using Terminal or Command Prompt by
 ```
@@ -24,12 +20,14 @@ git clone https://github.com/shunsuke218/MET-CS-473-project/
 
 Now the repository should be available in your home directory. 
 
-Run:
+Now run,
 ```
-serve .
+cd MET-CS-473-project
+npm i
+node server
 ```
 
-Go to localhost:5000 in your browser.
+Go to localhost:5005 in your browser.
 
 
 ## Built With
