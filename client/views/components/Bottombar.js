@@ -1,12 +1,9 @@
 let Bottombar = {
     render: async () => {
         let view =  /*html*/`
-        <footer class="footer">
-                <p>
-                    Proudly Made by Shun Haga, Majda Hichy, Robert Kubli, Gloria Lee, Naima Matahri and Steve Mu
-                </p>
-     
-        </footer>
+            <footer id="footer">
+                Proudly Made by Shun Haga, Majda Hichy, Robert Kubli, Gloria Lee, Naima Matahri and Steve Mu
+            </footer>
         `
         return view
     },
