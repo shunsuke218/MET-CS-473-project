@@ -4,7 +4,8 @@ let Home = {
             <div id="home">
                 <h1>Home</h1>
                 <p>Welcome to family tree application!</p>
-                <a href="/#/family-tree">View a demo tree</a>
+                <a href="/#/family-tree">View your tree</a>
+                <a href="/#/family-tree-dev">Shun's working tree</a>
             </div>
         
        `

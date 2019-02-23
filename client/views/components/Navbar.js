@@ -1,4 +1,14 @@
-import {getSiteRootFromUrl} from '../../utils/utils.js';
+import {
+    getSiteRootFromUrl,
+    getUserEmailWithAccessToken,
+    isAuthenticatedSimple,
+    isAuthenticated,
+    localLoginSuccess,
+    renewTokens,
+    logoutSimple,
+    logout,
+    getAuth0Lock
+} from '../../utils/utils.js';
 
 let Navbar = {
     render: async () => {
@@ -13,106 +23,31 @@ let Navbar = {
     },
     after_render: async () => {
 
-        var idToken;
-        var accessToken;
-        var expiresAt;
+        var lock = getAuth0Lock();
 
-        var webAuth = new auth0.WebAuth({
-            domain: 'cs473familytree.auth0.com',
-            clientID: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
-            responseType: 'token id_token',
-            scope: 'openid',
-            redirectUri: window.location.href
+        lock.on("authenticated", function (authResult) {
+            // debugger;
+            // console.log(authResult);
+            // loginBtn.style.display = 'none';
+            localLoginSuccess(authResult, displayButtons);
         });
 
         var loginBtn = document.getElementById('btn-login');
-
-        loginBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            webAuth.authorize();
+        loginBtn.style.display = 'none';
+        loginBtn.addEventListener('click', function () {
+            lock.show();
         });
 
         var logoutBtn = document.getElementById('btn-logout');
-        logoutBtn.addEventListener('click', logout);
-
-        loginBtn.style.display = 'none';
         logoutBtn.style.display = 'none';
+        logoutBtn.addEventListener('click', () => {
+            logout(lock, displayButtons);
+        });
 
-        function handleAuthentication() {
-            webAuth.parseHash(function (err, authResult) {
-                if (authResult && authResult.accessToken && authResult.idToken) {
-                    window.location.hash = '/';
-                    localLogin(authResult);
-                    loginBtn.style.display = 'none';
-                    // homeView.style.display = 'inline-block';
-                } else if (err) {
-                    // homeView.style.display = 'inline-block';
-                    console.log(err);
-                    alert(
-                        'Error: ' + err.error + '. Check the console for further details.'
-                    );
-                }
-                displayButtons();
-            });
-        }
-
-        function localLogin(authResult) {
-            // Set isLoggedIn flag in localStorage
-            localStorage.setItem('isLoggedIn', 'true');
-            // Set the time that the access token will expire at
-            expiresAt = JSON.stringify(
-                authResult.expiresIn * 1000 + new Date().getTime()
-            );
-            accessToken = authResult.accessToken;
-            idToken = authResult.idToken;
-        }
-
-        async function logout() {
-            // Remove isLoggedIn flag from localStorage
-            localStorage.removeItem('isLoggedIn');
-            // Remove tokens and expiry time
-            accessToken = '';
-            idToken = '';
-            expiresAt = 0;
-            displayButtons();
-
-            // console.log(window.location.href);
-            let returnTo = getSiteRootFromUrl(window.location.href);
-
-            webAuth.logout({
-                returnTo,
-                client_id: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi'
-              });
-
-            // window.location = "https://cs473familytree.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost:5005/"
-
-        }
-
-
-        function renewTokens() {
-            webAuth.checkSession({}, (err, authResult) => {
-                if (authResult && authResult.accessToken && authResult.idToken) {
-                    localLogin(authResult);
-                } else if (err) {
-                    alert(
-                        'Could not get a new token ' + err.error + ':' + err.error_description + '.'
-                    );
-                    logout();
-                }
-                displayButtons();
-            });
-        }
-
-        function isAuthenticated() {
-            // Check whether the current time is past the
-            // Access Token's expiry time
-            var expiration = parseInt(expiresAt) || 0;
-            return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration;
-        }
 
         function displayButtons() {
             // console.log(isAuthenticated());
-            if (isAuthenticated()) {
+            if (isAuthenticatedSimple()) {
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
             } else {
@@ -121,11 +56,21 @@ let Navbar = {
             }
         }
 
+        displayButtons();
+
+
         if (localStorage.getItem('isLoggedIn') === 'true') {
-            renewTokens();
+            // console.log('is logged in');
+            renewTokens( // success
+                lock,
+                displayButtons,
+                logout(lock, displayButtons));
         } else {
-            handleAuthentication();
+            // console.log('not logged in');
+            displayButtons();
         }
+
+
     }
 
 }
