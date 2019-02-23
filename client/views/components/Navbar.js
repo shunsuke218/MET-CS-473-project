@@ -6,7 +6,8 @@ import {
     localLoginSuccess,
     renewTokens,
     logoutSimple,
-    logout
+    logout,
+    getAuth0Lock
 } from '../../utils/utils.js';
 
 let Navbar = {
@@ -22,10 +23,7 @@ let Navbar = {
     },
     after_render: async () => {
 
-        var lock = new Auth0Lock(
-            'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
-            'cs473familytree.auth0.com'
-        );
+        var lock = getAuth0Lock();
 
         lock.on("authenticated", function (authResult) {
             // debugger;
