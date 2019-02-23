@@ -65,12 +65,8 @@ let Navbar = {
             // console.log('is logged in');
             renewTokens( // success
                 lock,
-                async () => {
-                    displayButtons();
-                },
-                async () => { // error
-                    logout(lock, displayButtons);
-                });
+                displayButtons,
+                logout(lock, displayButtons));
         } else {
             // console.log('not logged in');
             displayButtons();
