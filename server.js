@@ -10,7 +10,7 @@ app.use(history({
     index: 'index.html'
 }));
 
-// app.use("/api/user", require("./src/routes/user"));
+app.use("/api/tree", require("./routes/tree"));
 
 app.use("/", express.static("client"));
 

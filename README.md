@@ -57,3 +57,6 @@ This project is licensed under the BSD License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 etc.
+
+## database config:
+
