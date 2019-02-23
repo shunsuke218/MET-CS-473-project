@@ -4,18 +4,18 @@ import { loginSuccess, parseRequestURL } from './utils/utils.js';
 
 import Home from './views/pages/Home.js'
 import FamilyTree from './views/pages/FamilyTree.js'
+import FamilyTreeDev from './views/pages/FamilyTreeDev.js'
 import Error404 from './views/pages/Error404.js'
 
 import Navbar from './views/components/Navbar.js'
 import Bottombar from './views/components/Bottombar.js'
-
-import Utils from './services/Utils.js'
 
 
 // List of supported routes. Any url other than these routes will throw a 404 error
 const routes = {
     '/': Home,
     '/family-tree': FamilyTree,
+    '/family-tree-dev': FamilyTreeDev,
 };
 
 
@@ -51,9 +51,8 @@ const router = async () => {
     footer.innerHTML = await Bottombar.render();
     await Bottombar.after_render();
 
-
     // Get the parsed URl from the addressbar
-    let request = Utils.parseRequestURL()
+    let request = parseRequestURL()
 
     // Parse the URL and if it has an id part, change it with the string ":id"
     let parsedURL = (request.resource ? '/' + request.resource : '/') + (request.id ? '/:id' : '') + (request.verb ? '/' + request.verb : '')

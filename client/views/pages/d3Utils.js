@@ -1,21 +1,10 @@
-let initSvgTree = () => {
+let initSvgTree = (nodes, links, changeCb) => {
     const width = 500, height = 500;
     const nodewidth = 300, nodeheight = 200, nodeoffset = 30;
     const divwidth = 200, divheight = 150, divoffset = 54;
     // Don't forget to edit .node class of css!!
 
     var numNodes = 100;
-    var nodes = [
-        { id: 0, label: "Shun", spread: 0, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true, desc: "this is testing script" },
-        { id: 1, label: "Wife", spread: 2, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true },
-        { id: 2, label: "MeWife", spread: 1, depth: 0, connection: true, child: [3, 4] },
-        { id: 3, label: "Son", spread: 1, depth: 1, dob: "2019/1/1", hasSibling: true },
-        { id: 4, label: "Daughter", spread: 1, depth: 1, dob: "2019/1/1", hasSibling: true },
-        { id: 5, label: "Dad", spread: -1, depth: -1, dob: "1969/1/1", hasChild: true, isMarried: true },
-        { id: 6, label: "Mom", spread: 1, depth: -1, hasChild: true, isMarried: true },
-        { id: 7, label: "DadMom", spread: 0, depth: -1, connection: true, hasChild: true, child: [0] },
-        { id: 8, label: "Grandpa", spread: -1, depth: -2, dob: "1939/1/1", hasChild: true }
-    ]
 
     nodes.forEach(function (tmpnode) {
         tmpnode["width"] = nodewidth;
@@ -25,18 +14,6 @@ let initSvgTree = () => {
     var numid = nodes.length;
     //var coord = recalculate();
     var depth = 4, spread = 3;
-    var links = [
-        { id: 0, source: 0, target: 2 },
-        { id: 1, source: 1, target: 2 },
-        { id: 2, source: 2, target: 3 },
-        { id: 3, source: 2, target: 4 },
-        { id: 4, source: 5, target: 7 },
-        { id: 5, source: 6, target: 7 },
-        { id: 6, source: 7, target: 0 },
-        { id: 7, source: 8, target: 5 },
-    ]
-
-
 
     //////////////////////////////////////////////////
     // Set up Layout
@@ -550,7 +527,7 @@ let initSvgTree = () => {
             .on("mouseover", mouseoverNode)
             .on("mouseout", mouseoutNode)
             .attr("class", function (d) { return (d.connection) ? "node-connection" : "node"; });
-            
+
         nodeEnter
             .each(function (d) {
                 // console.log(this);
@@ -649,6 +626,8 @@ let initSvgTree = () => {
         simulation.force("link").links(links);
         recalculate();
         simulation.alpha(1).restart();
+
+        changeCb(nodes, links);
     }
 
 
@@ -685,4 +664,4 @@ let initSvgTree = () => {
     restart(); // I moved restart here
 }
 
-export {initSvgTree};
+export { initSvgTree };
