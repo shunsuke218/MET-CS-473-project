@@ -1,4 +1,13 @@
-import { getSiteRootFromUrl } from '../../utils/utils.js';
+import {
+    getSiteRootFromUrl,
+    getUserEmailWithAccessToken,
+    isAuthenticatedSimple,
+    isAuthenticated,
+    localLoginSuccess,
+    renewTokens,
+    logoutSimple,
+    logout
+} from '../../utils/utils.js';
 
 let Navbar = {
     render: async () => {
@@ -18,105 +27,29 @@ let Navbar = {
             'cs473familytree.auth0.com'
         );
 
-        var idToken;
-        var accessToken;
-        var expiresAt;
+        lock.on("authenticated", function (authResult) {
+            // debugger;
+            // console.log(authResult);
+            // loginBtn.style.display = 'none';
+            localLoginSuccess(authResult, displayButtons);
+        });
 
         var loginBtn = document.getElementById('btn-login');
-
-        loginBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            // webAuth.authorize();
+        loginBtn.style.display = 'none';
+        loginBtn.addEventListener('click', function () {
             lock.show();
         });
 
         var logoutBtn = document.getElementById('btn-logout');
-        logoutBtn.addEventListener('click', logout);
-
-        loginBtn.style.display = 'none';
         logoutBtn.style.display = 'none';
-
-        lock.on("authenticated", function (authResult) {
-            // console.log(authResult);
-            localLogin(authResult);
-            loginBtn.style.display = 'none';
-
-            // Use the token in authResult to getUserInfo() and save it to localStorage
-            lock.getUserInfo(authResult.accessToken, function (error, profile) {
-
-                // console.log(profile);
-
-                if (error) {
-                    // Handle error
-                    return;
-                }
-
-                localStorage.setItem('accessToken', authResult.accessToken);
-                displayButtons();
-
-            });
+        logoutBtn.addEventListener('click', () => {
+            logout(lock, displayButtons);
         });
 
-        function localLogin(authResult) {
-            // Set isLoggedIn flag in localStorage
-            localStorage.setItem('isLoggedIn', 'true');
-            // Set the time that the access token will expire at
-            expiresAt = JSON.stringify(
-                authResult.expiresIn * 1000 + new Date().getTime()
-            );
-            console.log(expiresAt);
-            accessToken = authResult.accessToken;
-            idToken = authResult.idToken;
-        }
-
-        async function logout() {
-            // Remove isLoggedIn flag from localStorage
-            localStorage.removeItem('isLoggedIn');
-            // Remove tokens and expiry time
-            accessToken = '';
-            idToken = '';
-            expiresAt = 0;
-            displayButtons();
-
-            // console.log(window.location.href);
-            let returnTo = getSiteRootFromUrl(window.location.href);
-
-            // todo
-            lock.logout({
-                returnTo
-            });
-
-        }
-
-
-        function renewTokens() {
-            // console.log('renew');
-            lock.checkSession({}, (err, authResult) => {
-                console.log(authResult);
-                if (authResult && authResult.accessToken) {
-                    // console.log(authResult);
-                    localLogin(authResult);
-                } else if (err) {
-                    alert(
-                        'Could not get a new token ' + err.error + ':' + err.error_description + '.'
-                    );
-                    logout();
-                }
-                displayButtons();
-            });
-        }
-
-        function isAuthenticated() {
-            // Check whether the current time is past the
-            // Access Token's expiry time
-            var expiration = parseInt(expiresAt) || 0;
-            // console.log(expiresAt);
-            return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration;
-        }
 
         function displayButtons() {
             // console.log(isAuthenticated());
-            if (isAuthenticated()) {
+            if (isAuthenticatedSimple()) {
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
             } else {
@@ -125,9 +58,17 @@ let Navbar = {
             }
         }
 
+        displayButtons();
+
+
         if (localStorage.getItem('isLoggedIn') === 'true') {
-            renewTokens();
+            // console.log('is logged in');
+            renewTokens( // success
+                lock,
+                displayButtons,
+                logout(lock, displayButtons));
         } else {
+            // console.log('not logged in');
             displayButtons();
         }
 
