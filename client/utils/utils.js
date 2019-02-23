@@ -19,6 +19,21 @@ function getSiteRootFromUrl(url) {
 // console.log('lock1');
 // console.log(lock);
 
+var lock = new Auth0Lock(
+    'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
+    'cs473familytree.auth0.com'
+);
+
+function getAuth0Lock() {
+
+    var lock = new Auth0Lock(
+        'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
+        'cs473familytree.auth0.com'
+    );
+
+    return lock;
+}
+
 function isAuthenticated() {
     // Check whether the current time is past the
     // Access Token's expiry time
@@ -118,20 +133,20 @@ function parseRequestURL() {
     let url = location.hash.slice(1).toLowerCase() || '/';
     let r = url.split("/")
     let request = {
-        resource    : null,
-        id          : null,
-        verb        : null
+        resource: null,
+        id: null,
+        verb: null
     }
-    request.resource    = r[1]
-    request.id          = r[2]
-    request.verb        = r[3]
+    request.resource = r[1]
+    request.id = r[2]
+    request.verb = r[3]
 
     return request
 }
 
-export { 
-    getSiteRootFromUrl, 
-    getUserEmailWithAccessToken, 
+export {
+    getSiteRootFromUrl,
+    getUserEmailWithAccessToken,
     isAuthenticated,
     localLoginSuccess,
     renewTokens,
@@ -139,5 +154,6 @@ export {
     loginSuccess,
     isAuthenticatedSimple,
     logoutSimple,
-    parseRequestURL
- }
+    parseRequestURL,
+    getAuth0Lock
+}
