@@ -23,8 +23,8 @@ Now the repository should be available in your home directory.
 Now run,
 ```
 cd MET-CS-473-project
-npm i // this is to install the dependencies
-node server // it will run the server
+npm i # this is to install the dependencies
+node server # it will run the server
 ```
 
 Go to localhost:5005 in your browser. You should be able to see the website in action.
@@ -52,7 +52,7 @@ For the versions available, see the [tags on this repository](https://github.com
 
 ## License
 
-This project is licensed under the BSD License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the BSD License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
