@@ -2,10 +2,16 @@ body {
     font-family: "Lato", sans-serif;
     transition: background-color .5s;
 }
+/* this sheet for nav and button  */
+
 
 /* styles for nav bar */
 
-
+#navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 
 
 /* styles for footer */

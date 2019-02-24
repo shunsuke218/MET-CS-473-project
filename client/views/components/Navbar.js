@@ -15,8 +15,11 @@ let Navbar = {
         let view =  /*html*/`
              <nav id="navbar">
                 <div>Family Tree</div>
-                <div id="login"><a href="#" id="btn-login">Login</a></div>
-                <div id="logout"><a href="#" id="btn-logout">Log out</div>
+                <div>
+                    <div id="login"><a href="#" id="btn-login">Login</a></div>
+                    <div id="logout"><a href="#" id="btn-logout">Log out</a></div>
+                </div>
+             
             </nav>
         `
         return view
