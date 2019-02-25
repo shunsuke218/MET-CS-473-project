@@ -20,6 +20,8 @@ git clone https://github.com/shunsuke218/MET-CS-473-project/
 
 Now the repository should be available in your home directory. 
 
+You need to create an .env file in your project, and store the MONGO_URI and DB variable in it.
+
 Now run,
 ```
 cd MET-CS-473-project
