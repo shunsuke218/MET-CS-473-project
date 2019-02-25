@@ -1,12 +1,8 @@
 import {
-    getSiteRootFromUrl,
-    getUserEmailWithAccessToken,
     isAuthenticatedSimple,
-    isAuthenticated,
-    localLoginSuccess,
-    renewTokens,
+    localLoginSuccessSimple,
+    getUserProfile,
     logoutSimple,
-    logout,
     getAuth0Lock
 } from '../../utils/utils.js';
 
@@ -29,7 +25,8 @@ let Navbar = {
             // debugger;
             // console.log(authResult);
             // loginBtn.style.display = 'none';
-            localLoginSuccess(authResult, displayButtons);
+            localLoginSuccessSimple(authResult, displayButtons);
+
         });
 
         var loginBtn = document.getElementById('btn-login');
@@ -41,7 +38,7 @@ let Navbar = {
         var logoutBtn = document.getElementById('btn-logout');
         logoutBtn.style.display = 'none';
         logoutBtn.addEventListener('click', () => {
-            logout(lock, displayButtons);
+            logoutSimple(lock, displayButtons);
         });
 
 
@@ -57,28 +54,6 @@ let Navbar = {
         }
 
         displayButtons();
-
-        lock.checkSession({}, async (err, authResult) => {
-            console.log(err);
-            // console.log(authResult);
-            // debugger
-
-        });
-
-        // if (localStorage.getItem('isLoggedIn') === 'true') {
-        //     renewTokens( // success
-        //         lock,
-        //         displayButtons,
-        //         () => {
-        //             debugger;
-        //             logout(lock, displayButtons)
-        //         }
-        //     );
-        // } else {
-        //     // console.log('not logged in');
-        //     displayButtons();
-        // }
-
 
     }
 

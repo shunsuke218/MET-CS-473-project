@@ -44,8 +44,8 @@ async function localLoginSuccess(authResult, cb) {
     cb();
 }
 
-function loginSuccess(token) {
-    localStorage.setItem('accessToken', token);
+function localLoginSuccessSimple(authResult, cb) {
+    localStorage.setItem('accessToken', authResult.accessToken);
 }
 
 function isAuthenticatedSimple() {
@@ -63,9 +63,9 @@ function isAuthenticatedSimple() {
 }
 
 function renewTokens(lock, successCb, errorCb) {
-    lock.checkSession({}, async (err, authResult) => {
-        console.log(err);
-        console.log(authResult);
+    lock.checkSession({}, async (err, authResult) => { // does not work, always return error
+        // console.log(err);
+        // console.log(authResult);
 
         if (authResult && authResult.accessToken) {
             localLoginSuccess(authResult, async () => {
@@ -93,11 +93,15 @@ function getUserEmailWithAccessToken(lock, token) {
 async function getUserEmail() {
     let lock = await getAuth0Lock();
     let token = localStorage.getItem("accessToken");
-    // console.log(token);
     let email = await getUserEmailWithAccessToken(lock, token);
     return email;
 }
 
+function getUserProfile() {
+    let profileStr = localStorage.getItem("profile");
+    let profileObj = JSON.parse(profileStr);
+    return profileObj;
+}
 
 function logout(lock, cb) {
     localStorage.removeItem('isLoggedIn');
@@ -148,10 +152,11 @@ export {
     localLoginSuccess,
     renewTokens,
     logout,
-    loginSuccess,
+    localLoginSuccessSimple,
     isAuthenticatedSimple,
     logoutSimple,
     parseRequestURL,
     getAuth0Lock,
-    getUserEmail
+    getUserEmail,
+    getUserProfile
 }

@@ -1,5 +1,5 @@
 import { initSvgTree } from './d3Utils.js';
-import {getUserEmail} from '../../utils/utils.js';
+import {isAuthenticatedSimple,getUserProfile} from '../../utils/utils.js';
 
 let FamilyTree = {
     render: async () => {
@@ -46,7 +46,9 @@ let FamilyTree = {
         initSvgTree(nodes, links, async (newNodes, newLinks) => {
             console.log('changed');
 
-            // todo: check if token exists
+            let isAuthed = isAuthenticatedSimple();
+            console.log(isAuthed);
+
             console.log(newNodes);
             console.log(newLinks);
 
