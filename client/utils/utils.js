@@ -14,15 +14,6 @@ function getSiteRootFromUrl(url) {
 //     'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
 //     'cs473familytree.auth0.com'
 // );
-// let lock = null;
-
-// console.log('lock1');
-// console.log(lock);
-
-var lock = new Auth0Lock(
-    'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
-    'cs473familytree.auth0.com'
-);
 
 function getAuth0Lock() {
 
@@ -71,21 +62,19 @@ function isAuthenticatedSimple() {
     // return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration;
 }
 
-async function renewTokens(lock, successCb, errorCb) {
-    // console.log('renew');
+function renewTokens(lock, successCb, errorCb) {
     lock.checkSession({}, async (err, authResult) => {
-        // console.log(authResult);
+        console.log(err);
+        console.log(authResult);
+
         if (authResult && authResult.accessToken) {
-            // console.log(authResult);
             localLoginSuccess(authResult, async () => {
                 await successCb();
             });
         } else if (err) {
             console.log(err);
             await errorCb();
-            // logout();
         }
-        // displayButtons();
     });
 }
 
@@ -99,6 +88,14 @@ function getUserEmailWithAccessToken(lock, token) {
             resolve(email);
         });
     })
+}
+
+async function getUserEmail() {
+    let lock = await getAuth0Lock();
+    let token = localStorage.getItem("accessToken");
+    // console.log(token);
+    let email = await getUserEmailWithAccessToken(lock, token);
+    return email;
 }
 
 
@@ -155,5 +152,6 @@ export {
     isAuthenticatedSimple,
     logoutSimple,
     parseRequestURL,
-    getAuth0Lock
+    getAuth0Lock,
+    getUserEmail
 }

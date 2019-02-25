@@ -58,17 +58,26 @@ let Navbar = {
 
         displayButtons();
 
+        lock.checkSession({}, async (err, authResult) => {
+            console.log(err);
+            // console.log(authResult);
+            // debugger
 
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            // console.log('is logged in');
-            renewTokens( // success
-                lock,
-                displayButtons,
-                logout(lock, displayButtons));
-        } else {
-            // console.log('not logged in');
-            displayButtons();
-        }
+        });
+
+        // if (localStorage.getItem('isLoggedIn') === 'true') {
+        //     renewTokens( // success
+        //         lock,
+        //         displayButtons,
+        //         () => {
+        //             debugger;
+        //             logout(lock, displayButtons)
+        //         }
+        //     );
+        // } else {
+        //     // console.log('not logged in');
+        //     displayButtons();
+        // }
 
 
     }

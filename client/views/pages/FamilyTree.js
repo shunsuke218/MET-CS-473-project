@@ -1,4 +1,5 @@
 import { initSvgTree } from './d3Utils.js';
+import {getUserEmail} from '../../utils/utils.js';
 
 let FamilyTree = {
     render: async () => {
@@ -42,11 +43,17 @@ let FamilyTree = {
         ]
     
 
-        initSvgTree(nodes, links, (newNodes, newLinks) => {
+        initSvgTree(nodes, links, async (newNodes, newLinks) => {
             console.log('changed');
 
+            // todo: check if token exists
             console.log(newNodes);
             console.log(newLinks);
+
+            // get user email
+            // let email = await getUserEmail();
+            // console.log(email);
+
         });
 
         
