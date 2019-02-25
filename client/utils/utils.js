@@ -44,7 +44,7 @@ async function localLoginSuccess(authResult, cb) {
     cb();
 }
 
-function localLoginSuccessSimple(authResult, cb) {
+function localLoginSuccessSimple(authResult) {
     localStorage.setItem('accessToken', authResult.accessToken);
 }
 

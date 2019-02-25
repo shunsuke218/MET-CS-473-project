@@ -25,8 +25,8 @@ let Navbar = {
             // debugger;
             // console.log(authResult);
             // loginBtn.style.display = 'none';
-            localLoginSuccessSimple(authResult, displayButtons);
-
+            localLoginSuccessSimple(authResult);
+            displayButtons();
         });
 
         var loginBtn = document.getElementById('btn-login');
