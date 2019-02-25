@@ -22,9 +22,6 @@ let Navbar = {
         var lock = getAuth0Lock();
 
         lock.on("authenticated", function (authResult) {
-            // debugger;
-            // console.log(authResult);
-            // loginBtn.style.display = 'none';
             localLoginSuccessSimple(authResult);
             displayButtons();
         });
