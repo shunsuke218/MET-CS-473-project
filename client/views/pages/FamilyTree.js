@@ -57,10 +57,20 @@ let FamilyTree = {
         initSvgTree(nodes, links, async (newNodes, newLinks) => {
             let { email } = getUserProfile();
 
+            // console.log(newLinks);
+            // convert new links to the following format:
+            //{ id: 0, source: 0, target: 2 },
+            let normalizedLinks = newLinks.map((link) => {
+                let id = link.id;
+                let source = link.source.id;
+                let target = link.target.id;
+                return {id, source, target};
+            })
+
             let record = {
                 email,
                 nodes: newNodes,
-                links: newLinks
+                links: normalizedLinks
             }
 
             await postJSON('/api/tree/updateRecord', record);

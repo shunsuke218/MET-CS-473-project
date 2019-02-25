@@ -36,10 +36,11 @@ app.use("/", express.static("client"));
 
     app.use("/api/tree", require("./routes/tree"));
 
-    app.use((req, res, next) => {
-        console.log('close');
-        client.close();
-    })
+    // app.use((req, res, next) => {
+    //     console.log('close');
+    //     // client.close();
+
+    // })
 
 })();
 

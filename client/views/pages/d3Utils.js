@@ -1,5 +1,5 @@
 let initSvgTree = (nodes, links, changeCb) => {
-    const width = 500, height = 500;
+    const width = 600, height = 500;
     const nodewidth = 300, nodeheight = 200, nodeoffset = 30;
     const divwidth = 200, divheight = 150, divoffset = 54;
     // Don't forget to edit .node class of css!!

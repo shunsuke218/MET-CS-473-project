@@ -1,71 +1,87 @@
 const express = require('express');
 const router = express.Router();
 
-router.post('/getRecord', async (req, res) => {
+router.post('/getRecord', async (req, res, next) => {
     let db = req.db;
     let { email } = req.body;
-    const collection = db.collection('records');
 
-    let record = await collection.findOne({ email: "a" });
+    try {
 
-    // not found
-    if (record == null) {
-        // send default tree
+        // console.log('here0');
+        const collection = db.collection('records');
+        let record = await collection.findOne({ email });
 
-        var nodes = [
-            { id: 0, label: "Shun", spread: 0, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true, desc: "this is testing script" },
-            { id: 1, label: "Wife", spread: 2, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true },
-            { id: 2, label: "MeWife", spread: 1, depth: 0, connection: true, child: [3, 4] },
-            { id: 3, label: "Son", spread: 1, depth: 1, dob: "2019/1/1", hasSibling: true },
-            { id: 4, label: "Daughter", spread: 1, depth: 1, dob: "2019/1/1", hasSibling: true },
-            { id: 5, label: "Dad", spread: -1, depth: -1, dob: "1969/1/1", hasChild: true, isMarried: true },
-            { id: 6, label: "Mom", spread: 1, depth: -1, hasChild: true, isMarried: true },
-            { id: 7, label: "DadMom", spread: 0, depth: -1, connection: true, hasChild: true, child: [0] },
-            { id: 8, label: "Grandpa", spread: -1, depth: -2, dob: "1939/1/1", hasChild: true }
-        ]
+        // not found
+        if (record == null) {
+            // send default tree
 
-        var links = [
-            { id: 0, source: 0, target: 2 },
-            { id: 1, source: 1, target: 2 },
-            { id: 2, source: 2, target: 3 },
-            { id: 3, source: 2, target: 4 },
-            { id: 4, source: 5, target: 7 },
-            { id: 5, source: 6, target: 7 },
-            { id: 6, source: 7, target: 0 },
-            { id: 7, source: 8, target: 5 },
-        ]
+            var nodes = [
+                { id: 0, label: "Shun", spread: 0, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true, desc: "this is testing script" },
+                { id: 1, label: "Wife", spread: 2, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true },
+                { id: 2, label: "MeWife", spread: 1, depth: 0, connection: true, child: [3, 4] },
+                { id: 3, label: "Son", spread: 1, depth: 1, dob: "2019/1/1", hasSibling: true },
+                { id: 4, label: "Daughter", spread: 1, depth: 1, dob: "2019/1/1", hasSibling: true },
+                { id: 5, label: "Dad", spread: -1, depth: -1, dob: "1969/1/1", hasChild: true, isMarried: true },
+                { id: 6, label: "Mom", spread: 1, depth: -1, hasChild: true, isMarried: true },
+                { id: 7, label: "DadMom", spread: 0, depth: -1, connection: true, hasChild: true, child: [0] },
+                { id: 8, label: "Grandpa", spread: -1, depth: -2, dob: "1939/1/1", hasChild: true }
+            ]
 
-        record = {
-            nodes, links
+            var links = [
+                { id: 0, source: 0, target: 2 },
+                { id: 1, source: 1, target: 2 },
+                { id: 2, source: 2, target: 3 },
+                { id: 3, source: 2, target: 4 },
+                { id: 4, source: 5, target: 7 },
+                { id: 5, source: 6, target: 7 },
+                { id: 6, source: 7, target: 0 },
+                { id: 7, source: 8, target: 5 },
+            ]
+
+            record = {
+                nodes, links
+            }
+
         }
 
+        return res.status(200).json({ record });
+    } catch (err) {
+        console.log(err);
+        return res.status(404).json({});
     }
-    // console.log(record);
-    res.status(200).json({ record });
 
 });
 
 router.post("/updateRecord", async (req, res) => {
-    let db = req.db;
-    let record = req.body;
-    let { email } = record;
 
-    // find all record pertain to this email
-    const collection = db.collection('records');
+    try {
+        let db = req.db;
+        let updatedRecord = req.body;
+        let { email } = updatedRecord;
 
-    let records = await collection.find({ email }).toArray();
+        // find all record pertain to this email
+        const collection = db.collection('records');
 
-    // if found
-    if (records.length !== 0) {
-        // update
-        await collection.updateOne({ email }, { $set: record });
-    } else {
-        // if not found
-        // insert
-        await collection.insertMany([record]);
+        let oldRecord = await collection.findOne({ email });
+
+        // if found
+        if (oldRecord != null) {
+            // update
+            await collection.updateOne({ email }, { $set: updatedRecord });
+        } else {
+            // if not found
+            // insert
+            await collection.insertOne(updatedRecord);
+        }
+
+        return res.status(200).json({ status: "success" });
+    } catch (err) {
+        console.log(err);
+        return res.status(404).json({});
+
     }
 
-    res.status(200).json({ status: "success" });
+
 });
 
 module.exports = router;
