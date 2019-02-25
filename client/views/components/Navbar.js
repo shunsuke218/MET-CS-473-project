@@ -21,8 +21,8 @@ let Navbar = {
 
         var lock = getAuth0Lock();
 
-        lock.on("authenticated", function (authResult) {
-            localLoginSuccessSimple(authResult);
+        lock.on("authenticated", async function (authResult) {
+            await localLoginSuccessSimple(lock, authResult);
             displayButtons();
         });
 

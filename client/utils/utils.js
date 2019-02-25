@@ -44,8 +44,23 @@ async function localLoginSuccess(authResult, cb) {
     cb();
 }
 
-function localLoginSuccessSimple(authResult) {
+async function localLoginSuccessSimple(lock, authResult) {
     localStorage.setItem('accessToken', authResult.accessToken);
+    let profile = await getUserInfoFromAuth0(lock, authResult.accessToken);
+    localStorage.setItem("profile", JSON.stringify(profile));
+    return profile;
+}
+
+function getUserInfoFromAuth0(lock, accessToken) {
+    return new Promise((resolve, reject) => {
+        lock.getUserInfo(accessToken, function (error, profile) {
+            if (!error) {
+                resolve(profile);
+            } else {
+                reject();
+            }
+        });
+    })
 }
 
 function isAuthenticatedSimple() {
