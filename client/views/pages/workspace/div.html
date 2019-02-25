@@ -1,110 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<script>
-	  $( ".et-pb-icon" ).click(function() {
-	  $( this ).toggleClass( "active" );
-	  });
-	</script>
-
-	<style>
-	  body {
-      font-family: "Lato", sans-serif;
-      transition: background-color .5s;
-	  }
-	  width: 200px;
-	  height: 96px;
-      border-radius: 25px;
-      background-color: white;
-      display: block;
-      margin: 30px 30px 30px 30px;
-      border: 2px solid #B19CD9;
-      padding: 20px;
-      transition: all 250ms 0s ease;
-	  }
-
-	  .node-div-hover {
-	  width: 200px;
-	  height: 192px;
-      border-radius: 25px;
-      background-color: white;
-      display: block;
-      margin: 30px 30px 30px 30px;
-      border: 2px solid #B19CD9;
-      padding: 20px;
-      transition: all 250ms 0s ease;
-	  }
-
-
-	  .profilepic {
-      /* please add px */
-      width: 100px;
-      height: 100px;
-      float: left;
-	  }
-
-	  .description {
-	  
-	  }
-	  
-	  .square {
-	  height: 100px;
-	  width: 100px;
-	  background-color: #555;
-	  }
-
-	  .square:active{
-      width: 200px;
-      height: 200px;
-	  }
-
-	  .square:focus{
-      width: 200px;
-      height: 200px;
-	  }
-
-	  :target{
-      width: 200px;
-      height: 200px;
-	  }
-
-
-	</style>
-  </head>
-  <body>
-
-	<h1>Unhovered Node</h1>
-	<div class="node-div">
-	  <img class="profilepic" src="../profile.png" alt="profile pic">
-	  <h3>NAME</h3>
-	  <h4>2018/1/1</h4>
-	</div>
-
-	<h1>Hovered Node</h1>
-	<div class="node-div-hover">
-	  <img class="profilepic" src="../profile.png" alt="profile pic">
-	  <h3>NAME</h3>
-	  <h4>2018/1/1</h4>
-	  <p>Description: Desc</p>
-	</div>
-
-	<p>This is an alias of what I have design for our Family Tree Project.  </p>
-
-	<p><b>Action Requsted:</b> Please edit this file, div.html and edit HTML/CSS/JS to make the node more appearing to the user. Remember, the node contains name, dob, gender, description, and possibly other information for each individual. Those information need to be editable as the user wishes. </p>
-	<b>Restriction:</b>
-	  <li> Please <u>don't</u> use hovering (or any animation) with CSS animation. We deligate d3 to deal with those actions. CSS animation will most unlikely going to work.</li>
-<li> Let us avoid making a clumsy design. We need something simple, intuitive, yet neat in design.</li>
-<li>I think google image searching <a href="https://www.google.com/search?q=profile+widget&safe=off&hl=en-US&source=lnms&tbm=isch&sa=X&ved=0ahUKEwikktqm9tDgAhXFmOAKHZA8C_0Q_AUIDigB" target="_blank">profile widget</a> gives some ideas.</li>
-<li>Always remember, <i>Less is more.</i></li>
-<li> All fields need to be editable. This could be achieved by adding javascript functions. Check out some <a href="https://medium.com/swlh/creative-form-input-field-design-examples-bfe5dd50808a" target="_blank">innovative form</a> which may help you get some ideas.</li>
-<li>A color scheme is arbitrary at this moment, and we must talk as a team to determine which colors we should be using. But if you want to get inspired, checkout <a target="_blank" href="https://color.adobe.com/explore/?filter=most-popular&time=month">Adobe Color</a> for some nice color combinations.
-</li>
-<li>Maybe adding tab to node would be a cool feature to add.. :)</li>
-  </body>
-</html><head>
     <style>
+
+		.node-div, .node-div-hover{
+			border:5px solid black;
+		}
+
+		.profilepic{
+			border: 5px dotted black;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 20px;
+			width: 50%;
+		}
+
+		.names, .DOB{
+			text-align: center;
+		}
 
           .square {
           height: 100px;
@@ -113,41 +27,51 @@
           }
 
           .square:active{
-      width: 200px;
-      height: 200px;
+      		width: 200px;
+      		height: 200px;
           }
 
           .square:focus{
-      width: 200px;
-      height: 200px;
+      		width: 200px;
+      		height: 200px;
           }
 
           :target{
-      width: 200px;
-      height: 200px;
+      		width: 200px;
+      		height: 200px;
           }
 
 
-        </style>
+		</style>
+		
+		<script>
+		var input = document.getElementById("nameInput");
+		input.addEventListener("keyup", function(event) {
+		if (event.keyCode === 13) {
+		event.preventDefault();
+		document.getElementById("myBtn").click();
+		}
+		});
+		</script>
   </head>
   <body>
 
         <h1>Unhovered Node</h1>
         <div class="node-div">
 		<img class="profilepic" src="../profile.png" alt="profile pic">
-          <h3><b>NAME</b></h3>
-		  <h4>2018/1/1</h4>
 		  <section>
 			  	<form id = "userInput" class = "form" autocomplete="off">
 				<div class = "form-inner">
 					<ol class = "inputs">
-						<li class = "current">
+						<li class = "names">
 							<span>
 								<label for = "nameInput"> Name</label>
 							</span>
 							<input id = "nameInput" name = "nameInput" type = "text">
+							<!-- don't know how to save the name -->
+							<button id="myBtn" onclick="javascript:alert('Hello World!')">Enter</button>
 						</li>
-						<li>
+						<li class = "DOB">
 							<span>
 								<label for = "DOBInput"> Date of Birth</label>
 							</span>
@@ -323,7 +247,7 @@
 					</div>
 				</form>
 		  </section>
-        </div>
+		</div>
 
         <h1>Hovered Node</h1>
         <div class="node-div-hover">
