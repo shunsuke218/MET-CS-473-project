@@ -4,7 +4,7 @@
 
 <head>
 	<style>
-		/* .square {
+		.square {
 			height: 100px;
 			width: 100px;
 			background-color: #555;
@@ -23,28 +23,43 @@
 		:target {
 			width: 200px;
 			height: 200px;
-		} */
-
-
-		.node-div-hover{
-			float:left;
-			width: 40%;
+		}
+		
+		.node-div-hover aside {
+			float: left;
+			width: 30%;
+			padding-right: 50px;
 
 		}
 
-		.node-div-bio-hover{
+		.node-div-hover {
 			float: right;
-  width: 60%;		
-  }
+			width: 80%;
+			margin-left: 10%;
+		}
+
+		.node-info{
+			color:#91CCA0;
+			text-align: left;
+			line-height: 150%;
+		
+		}
+
 		.node-name {
 			font-style: bold;
 			font-size: 200%;
 			text-align: center;
+			background: #457F54;
+			color:#91CCA0;
+			padding: 5px;
+			margin:5px;
 		}
 
 		.node-DOB {
 			font-size: 150%;
 			text-align: center;
+			margin:5px;
+			color:#91CCA0;
 		}
 
 		.profilepic {
@@ -53,10 +68,10 @@
 			margin-right: auto;
 			width: 50%;
 			border-radius: 25px;
-  border: 2px solid #73AD21;
-  padding: 20px; 
-  width: 70%;
-  height: 100%;; 
+			border: 5px solid #457F54;
+			padding: 20px;
+			width: 70%;
+			height: 100%;
 		}
 	</style>
 
@@ -64,51 +79,51 @@
 
 <body>
 	<h1>Hovered Node</h1>
-		<div class="node-div-hover">
+
+	<div class="node-div-hover">
+
+		<aside>
 			<img class="profilepic" src="../profile.png" alt="profile pic">
 			<h1 class="node-name">John Doe</h1>
 			<h2 class="node-DOB">March 13, 2008</h2>
-		</div>
-		<div class="node-div-bio-hover">
-
-			<p>
-				<b>Gender:</b> Male</br>
-				<b>Place of Birth:</b> Chicago, IL</br>
-				<b>Description:</b> Description (in text box)</br>
-			</p>
-
-		</div>
+		</aside>
+		<p class = "node-info">
+			<b>Gender:</b> Male</br>
+			<b>Place of Birth:</b> Chicago, IL</br>
+			<b>Description:</b> Description (in text box)</br>
+		</p>
+	</div>
 
 
-		<h1>Unhovered Node</h1>
-		<div class="node-div">
-			<img class="profilepic" src="../profile.png" alt="profile pic">
-			<h1 class="node-name">John Doe</h1>
-			<h2 class="node-DOB">March 13, 2008</h2>
-		</div>
+	<h1>Unhovered Node</h1>
+	<div class="node-div">
+		<img class="profilepic" src="../profile.png" alt="profile pic">
+		<h1 class="node-name">John Doe</h1>
+		<h2 class="node-DOB">March 13, 2008</h2>
+	</div>
 
 
-		<p>This is an alias of what I have design for our Family Tree Project. </p>
+	<p>This is an alias of what I have design for our Family Tree Project. </p>
 
-		<p><b>Action Requsted:</b> Please edit this file, div.html and edit HTML/CSS/JS to make the node more appearing to
-			the user. Remember, the node contains name, dob, gender, description, and possibly other information for each
-			individual. Those information need to be editable as the user wishes. </p>
-		<b>Restriction:</b>
-		<li> Please <u>don't</u> use hovering (or any animation) with CSS animation. We deligate d3 to deal with those
-			actions. CSS animation will most unlikely going to work.</li>
-		<li> Let us avoid making a clumsy design. We need something simple, intuitive, yet neat in design.</li>
-		<li>I think google image searching <a href="https://www.google.com/search?q=profile+widget&safe=off&hl=en-US&source=lnms&tbm=isch&sa=X&ved=0ahUKEwikktqm9tDgAhXFmOAKHZA8C_0Q_AUIDigB"
-			 target="_blank">profile widget</a> gives some ideas.</li>
-		<li>Always remember, <i>Less is more.</i></li>
-		<li> All fields need to be editable. This could be achieved by adding javascript functions. Check out some <a href="https://medium.com/swlh/creative-form-input-field-design-examples-bfe5dd50808a"
-			 target="_blank">innovative form</a> which may help you get some ideas.</li>
-		<li>A color scheme is arbitrary at this moment, and we must talk as a team to determine which colors we should be
-			using. But if you want to get inspired, checkout <a target="_blank" href="https://color.adobe.com/explore/?filter=most-popular&time=month">Adobe
-				Color</a> for some nice color combinations.
-			<!-- For the color schemes I like these:
+	<p><b>Action Requsted:</b> Please edit this file, div.html and edit HTML/CSS/JS to make the node more appearing to
+		the user. Remember, the node contains name, dob, gender, description, and possibly other information for each
+		individual. Those information need to be editable as the user wishes. </p>
+	<b>Restriction:</b>
+	<li> Please <u>don't</u> use hovering (or any animation) with CSS animation. We deligate d3 to deal with those
+		actions. CSS animation will most unlikely going to work.</li>
+	<li> Let us avoid making a clumsy design. We need something simple, intuitive, yet neat in design.</li>
+	<li>I think google image searching <a href="https://www.google.com/search?q=profile+widget&safe=off&hl=en-US&source=lnms&tbm=isch&sa=X&ved=0ahUKEwikktqm9tDgAhXFmOAKHZA8C_0Q_AUIDigB"
+		 target="_blank">profile widget</a> gives some ideas.</li>
+	<li>Always remember, <i>Less is more.</i></li>
+	<li> All fields need to be editable. This could be achieved by adding javascript functions. Check out some <a href="https://medium.com/swlh/creative-form-input-field-design-examples-bfe5dd50808a"
+		 target="_blank">innovative form</a> which may help you get some ideas.</li>
+	<li>A color scheme is arbitrary at this moment, and we must talk as a team to determine which colors we should be
+		using. But if you want to get inspired, checkout <a target="_blank" href="https://color.adobe.com/explore/?filter=most-popular&time=month">Adobe
+			Color</a> for some nice color combinations.
+		<!-- For the color schemes I like these:
 balsampoppel, tree and sky 2, and tree-->
-		</li>
-		<li>Maybe adding tab to node would be a cool feature to add.. :)</li>
+	</li>
+	<li>Maybe adding tab to node would be a cool feature to add.. :)</li>
 </body>
 
 </html>
