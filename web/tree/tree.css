@@ -1,8 +1,8 @@
-#family-tree line {
+#tree line {
     stroke: #ccc;
 }
 
-#family-tree .node-div {
+#tree .node-div {
     border-radius: 25px;
     background-color: white;
     display: block;
@@ -12,7 +12,7 @@
     transition: all 250ms 0s ease;
 }
 
-#family-tree .profilepic {
+#tree .profilepic {
     /* please add px */
     width: 100px;
     height: 100px;

@@ -20,8 +20,24 @@ function initSvgTree (nodes, links, changeCb) {
     //////////////////////////////////////////////////
     var svg = d3.select("body")
         .select("svg")
-        .attr("width", width).attr("height", height)
+        .attr("width", width)
+        .attr("height", height)
         .select(".objects");
+
+    // update tree div width on resize
+    window.addEventListener("resize", (e) => {
+        console.log(e);
+        console.log('resize');
+
+        let newTreeDivWidth = document.getElementById("tree").offsetWidth;
+
+        d3.select("body")
+        .select("svg")
+        .attr("width", newTreeDivWidth)
+        .attr("height", height)
+
+    })
+
     var node, link, circle, foreignobj;
 
     var simulation = d3.forceSimulation(nodes)
