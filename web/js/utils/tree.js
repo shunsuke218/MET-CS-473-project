@@ -1,4 +1,4 @@
-function initSvgTree (nodes, links, changeCb) {
+function initSvgTree(nodes, links, changeCb) {
     const width = 600, height = 500;
     const nodewidth = 300, nodeheight = 200, nodeoffset = 30;
     const divwidth = 200, divheight = 150, divoffset = 54;
@@ -32,9 +32,9 @@ function initSvgTree (nodes, links, changeCb) {
         let newTreeDivWidth = document.getElementById("tree").offsetWidth;
 
         d3.select("body")
-        .select("svg")
-        .attr("width", newTreeDivWidth)
-        .attr("height", height)
+            .select("svg")
+            .attr("width", newTreeDivWidth)
+            .attr("height", height)
 
     })
 
