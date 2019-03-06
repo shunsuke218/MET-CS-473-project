@@ -55,6 +55,8 @@ let FamilyTree = {
         let {nodes, links} = json.record;
         
         initSvgTree(nodes, links, async (newNodes, newLinks) => {
+            console.log(newNodes);
+
             let { email } = getUserProfile();
 
             // console.log(newLinks);

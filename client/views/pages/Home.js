@@ -12,6 +12,9 @@ let Home = {
         return view
     }, after_render: async () => {
 
+
+
+        
     }
 
 }
