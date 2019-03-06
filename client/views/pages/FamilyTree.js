@@ -7,12 +7,8 @@ let FamilyTree = {
         let view =  /*html*/`
         <div id="family-tree">
             <h1>Demo Family Tree here</h1>
-            <svg width="700" height="900">
-                <g class="objects">
-                    <g class="link"></g>
-                    <g class="node"></g>
-                </g>
-            </svg>
+            <div id="wrapper"></div>
+            <button id='saveButton'>Export my D3 visualization to PNG</button>
         </div>
         `
         return view
