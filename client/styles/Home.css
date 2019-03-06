@@ -2,6 +2,7 @@
     color: green;
 }
 
-#home a {
-    
+#home a:visited, #home a, #home a:hover {
+    color: green;
+
 }

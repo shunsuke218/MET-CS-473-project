@@ -11,7 +11,7 @@ app.use(history({
     index: 'index.html'
 }));
 
-app.use("/", express.static("client"));
+app.use("/", express.static("web"));
 
 // connect mongodb
 (async function () {
