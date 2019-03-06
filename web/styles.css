@@ -3,10 +3,20 @@ body {
     transition: background-color .5s;
 }
 
-/* styles for nav bar */
+/* home */
+
+#home {
+    color: green;
+}
+
+#home a {
+    
+}
+
+/* nav bar */
 
 
 
 
-/* styles for footer */
+/* footer */
 
