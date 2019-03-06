@@ -7,9 +7,9 @@ const MongoClient = require('mongodb').MongoClient;
 const app = express();
 app.use(bodyParer.json({ limit: '5000mb' }));
 app.set("port", 5005);
-app.use(history({
-    index: 'index.html'
-}));
+// app.use(history({
+//     index: 'index.html'
+// }));
 
 app.use("/", express.static("web"));
 

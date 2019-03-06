@@ -564,7 +564,7 @@ function initSvgTree (nodes, links, changeCb) {
                             // img
                             .append("xhtml:img")
                             .attr("class", "profilepic")
-                            .attr("src", "./images/profile.png")
+                            .attr("src", "../../images/profile.png")
                             .attr("alt", "profile pic")
                         div
                             // h3 (name)
