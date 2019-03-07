@@ -7,7 +7,12 @@ let Bottombar = {
         `
         return view
     },
-    after_render: async () => { }
+    after_render: async () => {
+
+
+
+        
+     }
 
 }
 

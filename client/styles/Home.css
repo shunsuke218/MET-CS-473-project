@@ -1,11 +1,9 @@
 #home {
     color: green;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
 }
 
-#home a {
-    
-}
 
-#home .title {
-
-}
