@@ -39,9 +39,9 @@ The staging server is located at https://cs473testing.stevemu.com
 
 * Use web folder, which contains the updated architecture
 * Put reusable js modules in js folder
-* each page has its own js, css and index.html. Use the tree folder for an example.
+* Each page should has its own js, css and index.html. Use the tree folder for an example.
 * Each html page should contains imports for common modules that should be on every page, and its own js file. Use tree/index.html and as example.
-* common css that applies to every pages should be written in styles.css (eg. home.css, tree.css)
+* Common css that applies to every pages should be written in styles.css (eg. home.css, tree.css)
 
 ## Built With
 
