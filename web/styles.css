@@ -1,3 +1,5 @@
+/* put common style here */
+
 body {
     font-family: "Lato", sans-serif;
     transition: background-color .5s;
@@ -8,15 +10,3 @@ body {
 #home {
     color: green;
 }
-
-#home a {
-    
-}
-
-/* nav bar */
-
-
-
-
-/* footer */
-

@@ -1,10 +1,12 @@
 let isAuthed = isAuthenticatedSimple();
+
+// if user not logged, redirect to home page
 if (!isAuthed) { // if not logged in
     // redirect user back to home page
     window.location.href = "/"
 }
 
-// commented code for local testing
+// code for local testing
 
 // var nodes = [
 //     { id: 0, label: "Shun", spread: 0, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true, desc: "this is testing script" },
@@ -36,6 +38,8 @@ if (!isAuthed) { // if not logged in
 //     console.log(newNodes);
 //     console.log(newLinks);
 // });
+
+// code below for getting and putting data to db
 
 async function getTreeFromApi() {
     let { email } = getUserProfile();
