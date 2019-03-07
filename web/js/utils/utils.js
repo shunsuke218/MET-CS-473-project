@@ -160,18 +160,18 @@ function parseRequestURL() {
     return request
 }
 
-export {
-    getSiteRootFromUrl,
-    getUserEmailWithAccessToken,
-    isAuthenticated,
-    localLoginSuccess,
-    renewTokens,
-    logout,
-    localLoginSuccessSimple,
-    isAuthenticatedSimple,
-    logoutSimple,
-    parseRequestURL,
-    getAuth0Lock,
-    getUserEmail,
-    getUserProfile
-}
+// export {
+//     getSiteRootFromUrl,
+//     getUserEmailWithAccessToken,
+//     isAuthenticated,
+//     localLoginSuccess,
+//     renewTokens,
+//     logout,
+//     localLoginSuccessSimple,
+//     isAuthenticatedSimple,
+//     logoutSimple,
+//     parseRequestURL,
+//     getAuth0Lock,
+//     getUserEmail,
+//     getUserProfile
+// }

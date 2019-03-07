@@ -1,6 +1,6 @@
 "use strict";
 
-import { loginSuccess, parseRequestURL } from './utils/utils.js';
+import { parseRequestURL } from './utils/utils.js';
 
 import Home from './views/pages/Home.js'
 import FamilyTree from './views/pages/FamilyTree.js'

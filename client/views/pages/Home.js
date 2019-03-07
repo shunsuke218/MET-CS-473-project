@@ -15,6 +15,7 @@ let Home = {
         return view
     }, after_render: async () => {
 
+<<<<<<< HEAD
     //    let toggleNavStatus = false;
 
     //    let toggleNav = function(){
@@ -58,6 +59,11 @@ let Home = {
 
 
 
+=======
+
+
+        
+>>>>>>> dev
     }
 
 

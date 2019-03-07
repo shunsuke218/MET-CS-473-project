@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Family Tree</title>
+
+    <!-- styles -->
+    <link rel="stylesheet" type="text/css" href="../styles.css">
+    <link rel="stylesheet" type="text/css" href="./tree.css">
+</head>
+
+<body>
+    <!-- <a href="#" id="btn-login">Login</a> -->
+    <div id="header_container">
+        <nav id="navbar">
+            <div>Family Tree</div>
+            <div id="login"><a href="#" id="btn-login">Login</a></div>
+            <div id="logout"><a href="#" id="btn-logout">Log out</a></div>
+        </nav>
+    </div>
+    <div id="page_container">
+        <div id="tree">
+            <h1>Demo Family Tree here</h1>
+            <svg>
+                <g class="objects">
+                    <g class="link"></g>
+                    <g class="node"></g>
+                </g>
+            </svg>
+        </div>
+    </div>
+    <div id="footer_container">
+        <footer id="footer">
+            Proudly Made by Shun Haga, Majda Hichy, Robert Kubli, Gloria Lee, Naima Matahri and Steve Mu
+        </footer>
+    </div>
+
+    <!-- js files that should be run on every page -->
+    <script src="https://cdn.auth0.com/js/lock/11.14/lock.min.js"></script>
+    <script src="../js/utils/utils.js"></script>
+    <script src="../js/utils/network.js"></script>
+    <script src="../js/nav.js"></script>
+
+    <!-- js files only for this page -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+    <script src="../js/libs/rectCollide.js"></script>
+    <script src="../js/utils/tree.js"></script>
+    <script src="./tree.js"></script>
+
+
+</body>
+
+</html>

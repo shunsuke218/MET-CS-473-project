@@ -1,4 +1,4 @@
-let initSvgTree = (nodes, links, changeCb) => {
+function initSvgTree(nodes, links, changeCb) {
     const width = 600, height = 500;
     const nodewidth = 300, nodeheight = 200, nodeoffset = 30;
     const divwidth = 200, divheight = 150, divoffset = 54;
@@ -20,8 +20,24 @@ let initSvgTree = (nodes, links, changeCb) => {
     //////////////////////////////////////////////////
     var svg = d3.select("body")
         .select("svg")
-        .attr("width", width).attr("height", height)
+        .attr("width", width)
+        .attr("height", height)
         .select(".objects");
+
+    // update tree div width on resize
+    window.addEventListener("resize", (e) => {
+        console.log(e);
+        console.log('resize');
+
+        let newTreeDivWidth = document.getElementById("tree").offsetWidth;
+
+        d3.select("body")
+            .select("svg")
+            .attr("width", newTreeDivWidth)
+            .attr("height", height)
+
+    })
+
     var node, link, circle, foreignobj;
 
     var simulation = d3.forceSimulation(nodes)
@@ -564,7 +580,7 @@ let initSvgTree = (nodes, links, changeCb) => {
                             // img
                             .append("xhtml:img")
                             .attr("class", "profilepic")
-                            .attr("src", "./views/pages/profile.png")
+                            .attr("src", "../../images/profile.png")
                             .attr("alt", "profile pic")
                         div
                             // h3 (name)
@@ -664,4 +680,4 @@ let initSvgTree = (nodes, links, changeCb) => {
     restart(); // I moved restart here
 }
 
-export { initSvgTree };
+// export { initSvgTree };
