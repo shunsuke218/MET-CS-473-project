@@ -26,7 +26,7 @@ Now run,
 ```
 cd MET-CS-473-project
 npm i # this is to install the dependencies
-# then, Create an .env file in your project, for the file content, ask Steve
+# then, create an .env file in your project, for the file content, ask Steve
 node server # it will run the server
 ```
 
