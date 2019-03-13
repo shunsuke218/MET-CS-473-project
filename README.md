@@ -26,8 +26,11 @@ Now run,
 ```
 cd MET-CS-473-project
 npm i # this is to install the dependencies
+# then, create an .env file in your project, for the file content, ask Steve
 node server # it will run the server
 ```
+
+
 
 Go to localhost:5005 in your browser. You should be able to see the website in action.
 
