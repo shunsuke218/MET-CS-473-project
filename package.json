@@ -4,7 +4,8 @@
   "description": "This is a web application which creates a user interactive web application that replicates a family tree. Users will be able to freely add/remove individual family members with desired information (i.e. name, gender, description, and photo). The web application will reformat the tree according to the change in number of family members. The tree information can be exported in a picture format (PNG). The web application will also be available to the public.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server"
   },
   "repository": {
     "type": "git",
