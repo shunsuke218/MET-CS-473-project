@@ -1,8 +1,7 @@
 #home {
     color: green;
-}
-
-#home a:visited, #home a, #home a:hover {
-    color: green;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
 }

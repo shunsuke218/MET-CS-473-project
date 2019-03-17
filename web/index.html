@@ -12,23 +12,49 @@
 
 <body>
     <!-- <a href="#" id="btn-login">Login</a> -->
-    <div id="header_container">
-        <nav id="navbar">
-            <div>Family Tree</div>
-            <div id="login"><a href="#" id="btn-login">Login</a></div>
-            <div id="logout"><a href="#" id="btn-logout">Log out</a></div>
+  
+        <nav>
+
+            <div>
+                <ul class="side-nav-links">
+                    <li><a href="#">Home</a></li>
+                    <li> <a href="#">View Family Tree</a></li>
+                    <li> <a href="#">Search</a></li>
+                </ul>
+
+                <div class="burger">
+                    <div class=line1></div>
+                    <div class=line2></div>
+                    <div class=line3></div>
+                </div>
+                <img src="./images/logo.png" alt="logo" id="logo-image">
+                <div class="logo">THE FAMILY TREE MAP</div>
+
+            </div>
+
+            <div>
+                <div id="login"><a href="#" id="btn-login" class="btn">Login</a></div>
+                <div id="logout"><a href="#" id="btn-logout" class="btn">Log out</a></div>
+                <div id="creatAccount"><a href="#" id="creat-account" class="btn">Creat an account</a></div>
+            </div>
+
         </nav>
-    </div>
+
+ 
+
     <div id="page_container">
         <div id="home">
-            <h1>Home of Naima</h1>
-            <p>Welcome to family tree application!</p>
+            <img src="./images/familyTree.jpeg" alt="tree" id="tree-image">
+            <!-- <img src="./images/rose.jpg" alt="tree" id="rose"> -->
+            <!-- <img src="./images/tree.jpg" alt="tree" id="tree-image"> -->
+            <div><a href="#" id="start-family-tree" >Start Your Family Tree</a></div>
             <a href="/tree">View your tree</a>
         </div>
     </div>
+
     <div id="footer_container">
         <footer id="footer">
-            Proudly Made by Shun Haga, Majda Hichy, Robert Kubli, Gloria Lee, Naima Matahri and Steve Mu
+            &#169; 2019 Proudly Made by Shun Haga, Majda Hichy, Robert Kubli, Gloria Lee, Naima Matahri and Steve Mu
         </footer>
     </div>
 
@@ -37,6 +63,8 @@
     <script src="./js/utils/utils.js"></script>
     <script src="./js/utils/network.js"></script>
     <script src="./js/nav.js"></script>
+    <script src="./js/navBar.js"></script>
+
 
     <!-- js files only for this page -->
 

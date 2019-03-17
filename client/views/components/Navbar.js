@@ -9,11 +9,28 @@ import {
 let Navbar = {
     render: async () => {
         let view =  /*html*/`
-             <nav id="navbar">
-                <div>Family Tree</div>
-                <div id="login"><a href="#" id="btn-login">Login</a></div>
-                <div id="logout"><a href="#" id="btn-logout">Log out</div>
-            </nav>
+     <nav id="navbar">
+             
+              
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+         </div>
+
+            <ul class="nav-links">
+            <li><a href="#" >Home</a></li>
+            <li><a href="#" >Family Tree</a></li>
+            <li><a href="#" >Search</a></li>
+            </ul>
+        <div>
+            <div id="login"><a href="#" id="btn-login" class="btn">LogIn</a></div>
+            <div id="logout"><a href="#" id="btn-logout" class="btn">Log out</a></div>
+        </div>
+            <div id="Creat-an-account"><a href="#" id="btn-Creat-an-account" class="btn">Creat an account</a></div>        
+            
+    </nav>
+               
         `
         return view
     },
@@ -56,4 +73,35 @@ let Navbar = {
 
 }
 
+const navSlide = () => {
+
+    const burger = document.querySelector('.burger');
+    const navLinks = document.querySelector('.nav-links');
+    const navLinksLi = document.querySelectorAll('.nav-links li');
+
+    burger.addEventListener('click', () => {
+
+        nav.classList.toggle('nave-active');
+    
+
+        //Animate links
+        navLiensLi.forEach((link, index) => {
+            link.style.animation = 'navLinkFade 0.5s ease forwards ${index / 7}s';
+            console.log(index / 3);
+        });
+        
+        burger.classList.toggle('toggle');
+        
+    });
+
+    navSlide();
+
+}
+    
+
 export default Navbar;
+
+    
+
+
+
