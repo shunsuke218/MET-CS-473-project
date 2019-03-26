@@ -8,7 +8,7 @@ window.addEventListener('load', function () {
         responseType: 'token id_token',
         scope: 'openid profile read:tree write:tree',
         redirectUri: window.location.href,
-        audience: 'http://localhost:5005/api',
+        audience: 'bucs473familytreeapi',
     });
 
     // will be successful after redirected from auth0
@@ -21,8 +21,7 @@ window.addEventListener('load', function () {
                 // console.log(err);
                 return
             }
-      
-            console.log('login success');
+
             onLoginSuccess(authResult)
             displayButtons()
         })

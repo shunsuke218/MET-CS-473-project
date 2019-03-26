@@ -9,7 +9,7 @@ var jwtCheck = jwt({
         jwksRequestsPerMinute: 5,
         jwksUri: 'https://cs473familytree.auth0.com/.well-known/jwks.json'
     }),
-    audience: 'http://localhost:5005/api',
+    audience: 'bucs473familytreeapi',
     issuer: 'https://cs473familytree.auth0.com/',
     algorithms: ['RS256']
 });
@@ -38,7 +38,7 @@ async function getUserProfile(req, res, next) {
         next()
     } catch (err) {
         console.log('err in getUserProfile in authUtils.js');
-        return res.status(401).json({error: "error in authentication"})
+        return res.status(401).json({ error: "error in authentication" })
         // console.error(err);
     }
 
