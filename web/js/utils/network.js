@@ -13,6 +13,7 @@ async function postJSON(url, json) {
 
 async function getJSON(url) {
     let accessToken = localStorage.getItem("accessToken")
+    // console.log(accessToken);
     let res = await fetch(url, {
         method: 'GET',
         headers: {

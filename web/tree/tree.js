@@ -43,6 +43,7 @@ if (!isAuthed) { // if not logged in
 
 async function getTreeFromApi() {
     let json = await getJSON('/api/tree/');
+    
     return json.tree;
 }
 

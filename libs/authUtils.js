@@ -16,7 +16,8 @@ var jwtCheck = jwt({
 
 async function getUserProfile(req, res, next) {
     try {
-        let accessToken = req.rawHeaders[1].substring(7)
+        let accessToken = req.headers.authorization.substring(7)
+
         let tokenPayload = req.user
         req.tokenPayload = tokenPayload
         req.scope = tokenPayload.scope
