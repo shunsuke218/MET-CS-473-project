@@ -3,32 +3,12 @@ let express = require('express');
 let bodyParer = require('body-parser');
 var history = require('connect-history-api-fallback');
 const MongoClient = require('mongodb').MongoClient;
-var jwt = require('express-jwt');
-var jwks = require('jwks-rsa');
+
 
 const app = express();
 app.use(bodyParer.json({ limit: '5000mb' }));
 app.set("port", 5005);
-// app.use(history({
-//     index: 'index.html'
-// }));
 
-var jwtCheck = jwt({
-    secret: jwks.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: 'https://cs473familytree.auth0.com/.well-known/jwks.json'
-  }),
-  audience: 'http://localhost:5005/api',
-  issuer: 'https://cs473familytree.auth0.com/',
-  algorithms: ['RS256']
-});
-// app.use(jwtCheck);
-
-app.get('/authorized', jwtCheck, function (req, res) {
-    res.send('Secured Resource');
-});
 
 // connect mongodb
 (async function () {

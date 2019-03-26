@@ -35,13 +35,12 @@ function isAuthenticated() {
     return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration;
 }
 
-async function localLoginSuccess(authResult, cb) {
+function onLoginSuccess(authResult, cb = () => {}) {
     localStorage.setItem('isLoggedIn', 'true');
     let expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
-    // console.log(expiresAt);
     localStorage.setItem('expiresAt', expiresAt);
     localStorage.setItem('accessToken', authResult.accessToken);
-    cb();
+    localStorage.setItem('idToken', authResult.idToken);
 }
 
 async function localLoginSuccessSimple(lock, authResult) {
@@ -77,19 +76,16 @@ function isAuthenticatedSimple() {
     // return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration;
 }
 
-function renewTokens(lock, successCb, errorCb) {
-    lock.checkSession({}, async (err, authResult) => { // does not work, always return error
-        // console.log(err);
-        // console.log(authResult);
-
-        if (authResult && authResult.accessToken) {
-            localLoginSuccess(authResult, async () => {
-                await successCb();
-            });
-        } else if (err) {
-            console.log(err);
-            await errorCb();
+function renewTokens(onError, onSuccess) {
+    webAuth.checkSession({}, (err, authResult) => {
+        if (err) {
+            // console.log('review token error');
+            // console.log(err);
+            // todo: logout
+            onError(err)
+            return
         }
+        onLoginSuccess(authResult, onSuccess);
     });
 }
 
@@ -118,18 +114,12 @@ function getUserProfile() {
     return profileObj;
 }
 
-function logout(lock, cb) {
+function auth0Logout(cb) {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('expiresAt');
     localStorage.removeItem('accessToken');
-
-    cb();
-
-    let returnTo = getSiteRootFromUrl(window.location.href);
-
-    lock.logout({
-        returnTo
-    });
+    localStorage.removeItem('idToken');
+    cb()
 }
 
 function logoutSimple(lock, cb) {

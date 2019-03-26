@@ -1,18 +1,36 @@
 const express = require('express');
 const router = express.Router();
+const { jwtCheck, getUserProfile, userHasScopes } = require("../libs/authUtils")
 
-router.post('/getRecord', async (req, res, next) => {
+
+router.get('/getRecord', jwtCheck, getUserProfile, async (req, res, next) => {
+
+    // check authorization
+    let scope = req.scope
+    if (!userHasScopes(scope, ["read:tree"])) {
+        return res.status(401).json({})
+    }
+
+    // get the user id
     let db = req.db;
-    let { email } = req.body;
+    let userId = req.userInfo.sub
+
+    // record format in db
+    /**
+     * {
+     *  userId: xxx,
+     *  tree: {}
+     * }
+     * 
+     * send only the tree
+     */
 
     try {
 
-        // console.log('here0');
-        const collection = db.collection('records');
-        let record = await collection.findOne({ email });
+        let tree = await db.collection('trees').findOne({ userId });
 
         // not found
-        if (record == null) {
+        if (tree == null) {
             // send default tree
 
             var nodes = [
@@ -38,13 +56,13 @@ router.post('/getRecord', async (req, res, next) => {
                 { id: 7, source: 8, target: 5 },
             ]
 
-            record = {
+            tree = {
                 nodes, links
             }
 
         }
 
-        return res.status(200).json({ record });
+        return res.status(200).json({ tree });
     } catch (err) {
         console.log(err);
         return res.status(404).json({});
