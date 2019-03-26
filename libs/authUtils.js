@@ -15,25 +15,33 @@ var jwtCheck = jwt({
 });
 
 async function getUserProfile(req, res, next) {
-    let accessToken = req.rawHeaders[1].substring(7)
-    let tokenPayload = req.user
-    req.tokenPayload = tokenPayload
-    req.scope = tokenPayload.scope
+    try {
+        let accessToken = req.rawHeaders[1].substring(7)
+        let tokenPayload = req.user
+        req.tokenPayload = tokenPayload
+        req.scope = tokenPayload.scope
 
-    // get user profile with access token
-    // request https://cs473familytree.auth0.com/userinfo
-    // with the access token
+        // get user profile with access token
+        // request https://cs473familytree.auth0.com/userinfo
+        // with the access token
 
-    let options = {
-        uri: "https://cs473familytree.auth0.com/userinfo",
-        headers: {
-            'Authorization': `Bearer ${accessToken}`
+        let options = {
+            uri: "https://cs473familytree.auth0.com/userinfo",
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
         }
-    }
-    let userInfo = await rp(options)
-    req.userInfo = JSON.parse(userInfo)
+        let userInfo = await rp(options)
+        req.userInfo = JSON.parse(userInfo)
 
-    next()
+        next()
+    } catch (err) {
+        console.log('err in getUserProfile in authUtils.js');
+        return res.status(401).json({error: "error in authentication"})
+        // console.error(err);
+    }
+
+
 }
 
 function userHasScopes(useScopesStr, requiredScopes) {

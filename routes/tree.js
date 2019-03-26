@@ -3,7 +3,7 @@ const router = express.Router();
 const { jwtCheck, getUserProfile, userHasScopes } = require("../libs/authUtils")
 
 
-router.get('/getRecord', jwtCheck, getUserProfile, async (req, res, next) => {
+router.get('/', jwtCheck, getUserProfile, async (req, res, next) => {
 
     // check authorization
     let scope = req.scope
@@ -70,7 +70,7 @@ router.get('/getRecord', jwtCheck, getUserProfile, async (req, res, next) => {
 
 });
 
-router.post("/updateRecord", async (req, res) => {
+router.post("/", async (req, res) => {
 
     try {
         let db = req.db;

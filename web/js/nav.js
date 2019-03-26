@@ -22,73 +22,81 @@
 //     // displayButtons();
 // });
 
-var webAuth = new auth0.WebAuth({
-    domain: 'cs473familytree.auth0.com',
-    clientID: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
-    responseType: 'token id_token',
-    scope: 'openid profile read:tree write:tree',
-    redirectUri: window.location.href,
-    audience: 'http://localhost:5005/api',
-});
-
-function onLogin() {
-    // on login
-    webAuth.parseHash(function (err, authResult) {
-        if (err) {
-            // error
-            console.log('error login');
-            console.log(err);
-            return
-        }
-
-        onLoginSuccess(authResult)
-    })
-
-}
-
-
-// called on refresh
-if (localStorage.getItem('isLoggedIn') === 'true') {
-    renewTokens((err) => {
-        //error
-        console.log('error renew token');
-        console.log(err);
-    }, () => {
-        // success
-        console.log('renew token success');
-        //todo: refresh button
+window.addEventListener('load', function () {
+    var webAuth = new auth0.WebAuth({
+        domain: 'cs473familytree.auth0.com',
+        clientID: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
+        responseType: 'token id_token',
+        scope: 'openid profile read:tree write:tree',
+        redirectUri: window.location.href,
+        audience: 'http://localhost:5005/api',
     });
-} else {
-    // called when redirected back from auth0
-    onLogin();
-}
+    
 
-// login button
-var loginBtn = document.getElementById('btn-login');
-loginBtn.style.display = 'none';
-loginBtn.addEventListener('click', function () {
-    // lock.show();
-    webAuth.authorize();
-});
+    function onLogin() {
+        // on login
+        console.log('will parse harh');
+        webAuth.parseHash(function (err, authResult) {
+            if (err) {
+                // error
+                console.log('error login');
+                console.log(err);
+                return
+            }
 
-// logout button
-var logoutBtn = document.getElementById('btn-logout');
-logoutBtn.style.display = 'none';
-logoutBtn.addEventListener('click', () => {
-    // logoutSimple(lock, displayButtons); todo
-    auth0Logout(displayButtons)
-});
+            console.log('login');
+            console.log(authResult);
+            onLoginSuccess(authResult)
+        })
 
-// check should display login or logout button
-function displayButtons() {
-    // console.log(isAuthenticated());
-    if (isAuthenticatedSimple()) { // todo
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'block';
-    } else {
-        loginBtn.style.display = 'block';
-        logoutBtn.style.display = 'none';
     }
-}
 
-displayButtons();
+
+    // called on refresh
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        renewTokens(webAuth, (err) => {
+            //error
+            console.log('error renew token');
+            console.log(err);
+        }, () => {
+            // success
+            console.log('renew token success');
+            //todo: refresh button
+        });
+    } else {
+        // called when redirected back from auth0
+        onLogin();
+    }
+
+    // login button
+    var loginBtn = document.getElementById('btn-login');
+    loginBtn.style.display = 'none';
+    loginBtn.addEventListener('click', function () {
+        // lock.show();
+        webAuth.authorize();
+    });
+
+    // logout button
+    var logoutBtn = document.getElementById('btn-logout');
+    logoutBtn.style.display = 'none';
+    logoutBtn.addEventListener('click', () => {
+        // logoutSimple(lock, displayButtons); todo
+        auth0Logout(displayButtons)
+    });
+
+    // check should display login or logout button
+    function displayButtons() {
+        // console.log(isAuthenticated());
+        if (isAuthenticatedSimple()) { // todo
+            loginBtn.style.display = 'none';
+            logoutBtn.style.display = 'block';
+        } else {
+            loginBtn.style.display = 'block';
+            logoutBtn.style.display = 'none';
+        }
+    }
+
+    displayButtons();
+
+
+})

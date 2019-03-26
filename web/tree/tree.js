@@ -42,37 +42,36 @@ if (!isAuthed) { // if not logged in
 // code below for getting and putting data to db
 
 async function getTreeFromApi() {
-    let { email } = getUserProfile();
-    let json = await postJSON('/api/tree/getRecord', { email });
-    return json.record;
+    let json = await getJSON('/api/tree/');
+    return json.tree;
 }
 
 (async function () {
-    let record = await getTreeFromApi();
-    let { nodes, links } = record;
+    let tree = await getTreeFromApi();
+    let { nodes, links } = tree;
 
     initSvgTree(nodes, links, async (newNodes, newLinks) => {
         // console.log(newNodes);
 
-        let { email } = getUserProfile();
+        // let { email } = getUserProfile();
 
-        // console.log(newLinks);
-        // convert new links to the following format:
-        //{ id: 0, source: 0, target: 2 },
-        let normalizedLinks = newLinks.map((link) => {
-            let id = link.id;
-            let source = link.source.id;
-            let target = link.target.id;
-            return { id, source, target };
-        })
+        // // console.log(newLinks);
+        // // convert new links to the following format:
+        // //{ id: 0, source: 0, target: 2 },
+        // let normalizedLinks = newLinks.map((link) => {
+        //     let id = link.id;
+        //     let source = link.source.id;
+        //     let target = link.target.id;
+        //     return { id, source, target };
+        // })
 
-        let record = {
-            email,
-            nodes: newNodes,
-            links: normalizedLinks
-        }
+        // let record = {
+        //     email,
+        //     nodes: newNodes,
+        //     links: normalizedLinks
+        // }
 
-        await postJSON('/api/tree/updateRecord', record);
+        // await postJSON('/api/tree/updateRecord', record);
 
     });
 

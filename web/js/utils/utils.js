@@ -1,3 +1,6 @@
+
+
+
 /*
       give this: http://localhost:5005/#/family-tree
       return this: http://localhost:5005/
@@ -15,15 +18,15 @@ function getSiteRootFromUrl(url) {
 //     'cs473familytree.auth0.com'
 // );
 
-function getAuth0Lock() {
+// function getAuth0Lock() {
 
-    var lock = new Auth0Lock(
-        'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
-        'cs473familytree.auth0.com'
-    );
+//     var lock = new Auth0Lock(
+//         'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
+//         'cs473familytree.auth0.com'
+//     );
 
-    return lock;
-}
+//     return lock;
+// }
 
 function isAuthenticated() {
     // Check whether the current time is past the
@@ -35,7 +38,7 @@ function isAuthenticated() {
     return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration;
 }
 
-function onLoginSuccess(authResult, cb = () => {}) {
+function onLoginSuccess(authResult, cb = () => { }) {
     localStorage.setItem('isLoggedIn', 'true');
     let expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
     localStorage.setItem('expiresAt', expiresAt);
@@ -50,17 +53,17 @@ async function localLoginSuccessSimple(lock, authResult) {
     return profile;
 }
 
-function getUserInfoFromAuth0(lock, accessToken) {
-    return new Promise((resolve, reject) => {
-        lock.getUserInfo(accessToken, function (error, profile) {
-            if (!error) {
-                resolve(profile);
-            } else {
-                reject();
-            }
-        });
-    })
-}
+// function getUserInfoFromAuth0(lock, accessToken) {
+//     return new Promise((resolve, reject) => {
+//         lock.getUserInfo(accessToken, function (error, profile) {
+//             if (!error) {
+//                 resolve(profile);
+//             } else {
+//                 reject();
+//             }
+//         });
+//     })
+// }
 
 function isAuthenticatedSimple() {
     let token = localStorage.getItem('accessToken');
@@ -76,7 +79,7 @@ function isAuthenticatedSimple() {
     // return localStorage.getItem('isLoggedIn') === 'true' && new Date().getTime() < expiration;
 }
 
-function renewTokens(onError, onSuccess) {
+function renewTokens(webAuth, onError, onSuccess) {
     webAuth.checkSession({}, (err, authResult) => {
         if (err) {
             // console.log('review token error');
@@ -89,30 +92,30 @@ function renewTokens(onError, onSuccess) {
     });
 }
 
-function getUserEmailWithAccessToken(lock, token) {
-    return new Promise((resolve, reject) => {
-        // Use the token in authResult to getUserInfo() and save it to localStorage
-        lock.getUserInfo(token, function (error, profile) {
-            if (error) { reject(); }
-            // store user's identify
-            let email = profile.email;
-            resolve(email);
-        });
-    })
-}
+// function getUserEmailWithAccessToken(lock, token) {
+//     return new Promise((resolve, reject) => {
+//         // Use the token in authResult to getUserInfo() and save it to localStorage
+//         lock.getUserInfo(token, function (error, profile) {
+//             if (error) { reject(); }
+//             // store user's identify
+//             let email = profile.email;
+//             resolve(email);
+//         });
+//     })
+// }
 
-async function getUserEmail() {
-    let lock = await getAuth0Lock();
-    let token = localStorage.getItem("accessToken");
-    let email = await getUserEmailWithAccessToken(lock, token);
-    return email;
-}
+// async function getUserEmail() {
+//     let lock = await getAuth0Lock();
+//     let token = localStorage.getItem("accessToken");
+//     let email = await getUserEmailWithAccessToken(lock, token);
+//     return email;
+// }
 
-function getUserProfile() {
-    let profileStr = localStorage.getItem("profile");
-    let profileObj = JSON.parse(profileStr);
-    return profileObj;
-}
+// function getUserProfile() {
+//     let profileStr = localStorage.getItem("profile");
+//     let profileObj = JSON.parse(profileStr);
+//     return profileObj;
+// }
 
 function auth0Logout(cb) {
     localStorage.removeItem('isLoggedIn');
@@ -122,17 +125,17 @@ function auth0Logout(cb) {
     cb()
 }
 
-function logoutSimple(lock, cb) {
-    localStorage.removeItem('accessToken');
+// function logoutSimple(lock, cb) {
+//     localStorage.removeItem('accessToken');
 
-    cb();
+//     cb();
 
-    let returnTo = getSiteRootFromUrl(window.location.href);
+//     let returnTo = getSiteRootFromUrl(window.location.href);
 
-    lock.logout({
-        returnTo
-    });
-}
+//     lock.logout({
+//         returnTo
+//     });
+// }
 
 function parseRequestURL() {
 
