@@ -22,7 +22,9 @@ window.addEventListener('load', function () {
                 return
             }
       
+            console.log('login success');
             onLoginSuccess(authResult)
+            displayButtons()
         })
 
     }

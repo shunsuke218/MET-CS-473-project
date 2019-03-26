@@ -10,7 +10,7 @@ function isAuthenticated() {
     return localStorage.getItem('accessToken') && new Date().getTime() < expiration;
 }
 
-function onLoginSuccess(authResult, cb = () => { }) {
+function onLoginSuccess(authResult) {
     localStorage.setItem('isLoggedIn', 'true');
     let expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
     localStorage.setItem('expiresAt', expiresAt);
