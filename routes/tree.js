@@ -2,7 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { jwtCheck, getUserProfile, userHasScopes } = require("../libs/authUtils")
 
-
+/*
+   * {
+   *  userId: xxx,
+   *  tree: {}
+   * }
+   */
 router.get('/', jwtCheck, getUserProfile, async (req, res, next) => {
 
     // check authorization
@@ -15,24 +20,11 @@ router.get('/', jwtCheck, getUserProfile, async (req, res, next) => {
     let db = req.db;
     let userId = req.userInfo.sub
 
-    // record format in db
-    /**
-     * {
-     *  userId: xxx,
-     *  tree: {}
-     * }
-     * 
-     * send only the tree
-     */
-
     try {
-
         let tree = await db.collection('trees').findOne({ userId });
-
         // not found
         if (tree == null) {
             // send default tree
-
             var nodes = [
                 { id: 0, label: "Shun", spread: 0, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true, desc: "this is testing script" },
                 { id: 1, label: "Wife", spread: 2, depth: 0, dob: "1999/1/1", isMarried: true, hasChild: true },
@@ -44,7 +36,6 @@ router.get('/', jwtCheck, getUserProfile, async (req, res, next) => {
                 { id: 7, label: "DadMom", spread: 0, depth: -1, connection: true, hasChild: true, child: [0] },
                 { id: 8, label: "Grandpa", spread: -1, depth: -2, dob: "1939/1/1", hasChild: true }
             ]
-
             var links = [
                 { id: 0, source: 0, target: 2 },
                 { id: 1, source: 1, target: 2 },
@@ -55,14 +46,16 @@ router.get('/', jwtCheck, getUserProfile, async (req, res, next) => {
                 { id: 6, source: 7, target: 0 },
                 { id: 7, source: 8, target: 5 },
             ]
-
             tree = {
                 nodes, links
             }
-
+            return res.status(200).json({ tree });
+        } else {
+            // found tree record
+            return res.status(200).json({ tree: tree.tree });
         }
 
-        return res.status(200).json({ tree });
+
     } catch (err) {
         console.log(err);
         return res.status(404).json({});
@@ -70,26 +63,34 @@ router.get('/', jwtCheck, getUserProfile, async (req, res, next) => {
 
 });
 
-router.post("/", async (req, res) => {
+router.post("/", jwtCheck, getUserProfile, async (req, res) => {
+
+    // check authorization
+    let scope = req.scope
+    if (!userHasScopes(scope, ["write:tree"])) {
+        return res.status(401).json({})
+    }
+
+    // get the user id
+    let db = req.db;
+    let userId = req.userInfo.sub
 
     try {
         let db = req.db;
-        let updatedRecord = req.body;
-        let { email } = updatedRecord;
+        let updatedTree = req.body.tree;
 
         // find all record pertain to this email
-        const collection = db.collection('records');
-
-        let oldRecord = await collection.findOne({ email });
+        const collection = db.collection('trees');
+        let oldTree = await collection.findOne({ userId });
 
         // if found
-        if (oldRecord != null) {
+        if (oldTree != null) {
             // update
-            await collection.updateOne({ email }, { $set: updatedRecord });
+            await collection.updateOne({ userId }, { $set: { userId, tree: updatedTree } });
         } else {
             // if not found
             // insert
-            await collection.insertOne(updatedRecord);
+            await collection.insertOne({ userId, tree: updatedTree });
         }
 
         return res.status(200).json({ status: "success" });

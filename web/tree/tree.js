@@ -1,4 +1,4 @@
-let isAuthed = isAuthenticatedSimple();
+let isAuthed = isAuthenticated();
 
 // if user not logged, redirect to home page
 if (!isAuthed) { // if not logged in
@@ -43,7 +43,6 @@ if (!isAuthed) { // if not logged in
 
 async function getTreeFromApi() {
     let json = await getJSON('/api/tree/');
-    
     return json.tree;
 }
 
@@ -52,27 +51,22 @@ async function getTreeFromApi() {
     let { nodes, links } = tree;
 
     initSvgTree(nodes, links, async (newNodes, newLinks) => {
-        // console.log(newNodes);
 
-        // let { email } = getUserProfile();
+        // convert new links to the following format:
+        //{ source: 0, target: 2 },
+        let normalizedLinks = newLinks.map((link) => {
+            let id = link.id;
+            let source = link.source.id;
+            let target = link.target.id;
+            return { id, source, target };
+        })
 
-        // // console.log(newLinks);
-        // // convert new links to the following format:
-        // //{ id: 0, source: 0, target: 2 },
-        // let normalizedLinks = newLinks.map((link) => {
-        //     let id = link.id;
-        //     let source = link.source.id;
-        //     let target = link.target.id;
-        //     return { id, source, target };
-        // })
+        let tree = {
+            nodes: newNodes,
+            links: normalizedLinks
+        }
 
-        // let record = {
-        //     email,
-        //     nodes: newNodes,
-        //     links: normalizedLinks
-        // }
-
-        // await postJSON('/api/tree/updateRecord', record);
+        await postJSON('/api/tree/', {tree});
 
     });
 

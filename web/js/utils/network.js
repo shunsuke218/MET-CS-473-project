@@ -1,7 +1,9 @@
 async function postJSON(url, json) {
+    let accessToken = localStorage.getItem("accessToken")
     let res = await fetch(url, {
         method: 'POST',
         headers: {
+            authorization: `Bearer ${accessToken}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
