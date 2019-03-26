@@ -1,4 +1,4 @@
-console.clear();
+// console.clear();
 const navSlide = () => {
     const burger = document.querySelector('.burger');
     const nav = document.querySelector('.side-nav-links');

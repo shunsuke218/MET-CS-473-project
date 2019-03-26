@@ -1,9 +1,25 @@
+//         responseType: 'token',
 
-var lock = getAuth0Lock();
+// var options = {
+//     auth: {
+
+        
+//         params: { scope: 'openid email profile', }
+//     }
+// };
+
+var lock = new Auth0Lock(
+    'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
+    'cs473familytree.auth0.com',
+    // options
+);
+
 
 lock.on("authenticated", async function (authResult) {
-    await localLoginSuccessSimple(lock, authResult);
-    displayButtons();
+    console.log(authResult);
+    // debugger;
+    // await localLoginSuccessSimple(lock, authResult);
+    // displayButtons();
 });
 
 var loginBtn = document.getElementById('btn-login');

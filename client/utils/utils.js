@@ -15,15 +15,31 @@ function getSiteRootFromUrl(url) {
 //     'cs473familytree.auth0.com'
 // );
 
-function getAuth0Lock() {
+// function getAuth0Lock() {
 
-    var lock = new Auth0Lock(
-        'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
-        'cs473familytree.auth0.com'
-    );
+//     var options = {
+//         oidcConformant: true,
+//         autoclose: true,
+//         socialButtonStyle: 'small',
+//         auth: {
+//             responseType: 'token',
+//             redirectUri: "http://localhost:5005",
+//             audience: "http://localhost:5005/api" ,
+//             params: { scope: 'openid email profile', },
+//             sso: true
+//         }
+//     };
 
-    return lock;
-}
+//     var lock = new Auth0Lock(
+//         'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
+//         'cs473familytree.auth0.com',
+//         options
+//     );
+
+//     return lock;
+// }
+
+
 
 function isAuthenticated() {
     // Check whether the current time is past the
@@ -106,7 +122,7 @@ function getUserEmailWithAccessToken(lock, token) {
 }
 
 async function getUserEmail() {
-    let lock = await getAuth0Lock();
+    // let lock = await getAuth0Lock();
     let token = localStorage.getItem("accessToken");
     let email = await getUserEmailWithAccessToken(lock, token);
     return email;
@@ -160,18 +176,17 @@ function parseRequestURL() {
     return request
 }
 
-export {
-    getSiteRootFromUrl,
-    getUserEmailWithAccessToken,
-    isAuthenticated,
-    localLoginSuccess,
-    renewTokens,
-    logout,
-    localLoginSuccessSimple,
-    isAuthenticatedSimple,
-    logoutSimple,
-    parseRequestURL,
-    getAuth0Lock,
-    getUserEmail,
-    getUserProfile
-}
+// export {
+//     getSiteRootFromUrl,
+//     getUserEmailWithAccessToken,
+//     isAuthenticated,
+//     localLoginSuccess,
+//     renewTokens,
+//     logout,
+//     localLoginSuccessSimple,
+//     isAuthenticatedSimple,
+//     logoutSimple,
+//     parseRequestURL,
+//     getUserEmail,
+//     getUserProfile
+// }
