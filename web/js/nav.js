@@ -1,14 +1,28 @@
 "use strict";
 
+let CLIENT_ID = "vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi";
+
 window.addEventListener('load', function () {
 
     var webAuth = new auth0.WebAuth({
         domain: 'cs473familytree.auth0.com',
-        clientID: 'vFJIRuqMjrla9QBtHjvLGFeWz4gENqZi',
+        clientID: CLIENT_ID,
         responseType: 'token id_token',
         scope: 'openid profile read:tree write:tree',
         redirectUri: window.location.href,
         audience: 'bucs473familytreeapi',
+    });
+
+    // attempt to renew token every time page refreshes
+    webAuth.checkSession({}, (err, authResult) => {
+        if (authResult && authResult.accessToken && authResult.idToken) {
+            // console.log(authResult);
+            onLoginSuccess(authResult)
+            displayButtons(isAuthenticated())
+        } else if (err) {
+            console.log(err);
+        }
+
     });
 
     // will be successful after redirected from auth0
@@ -22,6 +36,7 @@ window.addEventListener('load', function () {
                 return
             }
 
+            window.location.hash = '';
             onLoginSuccess(authResult)
             displayButtons()
         })
@@ -46,13 +61,14 @@ window.addEventListener('load', function () {
     logoutBtn.style.display = 'none';
     logoutBtn.addEventListener('click', () => {
         // logoutSimple(lock, displayButtons); todo
-        auth0Logout(displayButtons)
+        onLogout(webAuth)
+        displayButtons(isAuthenticated());
+
     });
 
     // check should display login or logout button
-    function displayButtons() {
-        // console.log(isAuthenticated());
-        if (isAuthenticated()) { // todo
+    function displayButtons(isAuthenticated) {
+        if (isAuthenticated) {
             loginBtn.style.display = 'none';
             logoutBtn.style.display = 'block';
         } else {
@@ -61,7 +77,7 @@ window.addEventListener('load', function () {
         }
     }
 
-    displayButtons();
+    displayButtons(isAuthenticated());
 
 
 })

@@ -53,12 +53,19 @@ function renewTokens(webAuth, onError, onSuccess) {
 }
 
 
-function auth0Logout(cb) {
+function onLogout(webAuth) {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('expiresAt');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('idToken');
-    cb()
+    logOutOfAuth0(webAuth)
+}
+
+const logOutOfAuth0 = (webAuth) => {
+    webAuth.logout({
+        returnTo: window.location.href,
+        client_id: CLIENT_ID
+      });
 }
 
 function parseRequestURL() {
