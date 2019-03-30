@@ -34,10 +34,9 @@
 
         </div>
 
-        <div>
+        <div id="nav-buttons">
             <div id="login"><a href="#" id="btn-login" class="btn">Login</a></div>
             <div id="logout"><a href="#" id="btn-logout" class="btn">Log out</a></div>
-            <div id="creatAccount"><a href="#" id="creat-account" class="btn">Creat an account</a></div>
         </div>
 
     </nav>
@@ -64,7 +63,11 @@
 
 
     <!-- js files only for this page -->
-
+    <script>
+        if (isAuthenticated()) {
+            window.location.href = "/tree"
+        }
+    </script>
 </body>
 
 </html>

@@ -9,22 +9,28 @@ window.addEventListener('load', function () {
         clientID: CLIENT_ID,
         responseType: 'token id_token',
         scope: 'openid profile read:tree write:tree',
-        redirectUri: window.location.href,
+        redirectUri: "http://localhost:5005",
+
+        // redirectUri: getSiteRootFromUrl(window.location.href) + "/tree",
         audience: 'bucs473familytreeapi',
     });
 
-    // attempt to renew token every time page refreshes
-    webAuth.checkSession({}, (err, authResult) => {
-        if (authResult && authResult.accessToken && authResult.idToken) {
-            // console.log(authResult);
-            onLoginSuccess(authResult)
-            displayButtons(isAuthenticated())
-            window.location = "/tree"
-        } else if (err) {
-            console.log(err);
-        }
+    if (!isAuthenticated()) {
 
-    });
+        // attempt to renew token every time page refreshes
+        webAuth.checkSession({}, (err, authResult) => {
+            if (authResult && authResult.accessToken && authResult.idToken) {
+                // console.log(authResult);
+                onLoginSuccess(authResult)
+                displayButtons(isAuthenticated())
+                location.reload() // reload so that the page can redirect to tree page
+            } else if (err) {
+                console.log(err);
+            }
+
+        });
+    }
+
 
     // will be successful after redirected from auth0
     function checkShouldHandleLogin() {
@@ -69,6 +75,7 @@ window.addEventListener('load', function () {
 
     // check should display login or logout button
     function displayButtons(isAuthenticated) {
+        document.getElementById('nav-buttons').style.display = "block";
         if (isAuthenticated) {
             loginBtn.style.display = 'none';
             logoutBtn.style.display = 'block';

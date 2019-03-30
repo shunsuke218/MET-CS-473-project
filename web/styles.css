@@ -15,6 +15,10 @@ body {
 	padding: 10px;
 }
 
+#nav-buttons {
+	display: none;
+}
+
 #tree-image {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
