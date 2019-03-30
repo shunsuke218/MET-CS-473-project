@@ -25,7 +25,7 @@ window.addEventListener('load', function () {
                 displayButtons(isAuthenticated())
                 location.reload() // reload so that the page can redirect to tree page
             } else if (err) {
-                console.log(err);
+                // console.log(err);
             }
 
         });

@@ -647,6 +647,12 @@ function initSvgTree(nodes, links, changeCb) {
 
     // Tick function -- executed whenever there is an action
     function ticked() {
+
+        //check when the link is empty.
+        if (links.length == 0) {
+            return
+        }
+
         // foreignObject
         node.select("foreignObject")
             .attr("x", function (d) { return d.x; })

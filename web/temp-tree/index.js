@@ -8,8 +8,8 @@ var links = [
 
 
 initSvgTree(nodes, links, (newNodes, newLinks) => {
-    console.log('changed');
+    // console.log('changed');
 
-    console.log(newNodes);
-    console.log(newLinks);
+    // console.log(newNodes);
+    // console.log(newLinks);
 });
