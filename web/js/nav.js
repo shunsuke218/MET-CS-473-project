@@ -75,7 +75,6 @@ window.addEventListener('load', function () {
 
     // check should display login or logout button
     function displayButtons(isAuthenticated) {
-        document.getElementById('nav-buttons').style.display = "block";
         if (isAuthenticated) {
             loginBtn.style.display = 'none';
             logoutBtn.style.display = 'block';
@@ -83,6 +82,8 @@ window.addEventListener('load', function () {
             loginBtn.style.display = 'block';
             logoutBtn.style.display = 'none';
         }
+        document.getElementById('nav-buttons').style.display = "block";
+
     }
 
     displayButtons(isAuthenticated());
