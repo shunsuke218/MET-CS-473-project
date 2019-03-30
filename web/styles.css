@@ -11,6 +11,10 @@ body {
 	overflow-y: hidden;
 }
 
+#page_container {
+	padding: 10px;
+}
+
 #tree-image {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
