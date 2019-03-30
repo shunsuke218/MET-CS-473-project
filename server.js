@@ -7,6 +7,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 const app = express();
 app.use(bodyParer.json({ limit: '5000mb' }));
+app.use(bodyParer.urlencoded());
 app.set("port", 5005);
 
 
@@ -32,6 +33,7 @@ app.set("port", 5005);
     }
 
     app.use("/api/tree", require("./routes/tree"));
+    app.use("/api/contact", require("./routes/contact"));
     app.use("/", express.static("web"));
 
     app.listen(app.get("port"), () => {

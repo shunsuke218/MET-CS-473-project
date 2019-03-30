@@ -64,10 +64,9 @@
 
       </div>
 
-      <div>
+      <div id="nav-buttons">
         <div id="login"><a href="#" id="btn-login" class="btn">Login</a></div>
         <div id="logout"><a href="#" id="btn-logout" class="btn">Log out</a></div>
-        <div id="creatAccount"><a href="#" id="creat-account" class="btn">Creat an account</a></div>
       </div>
 
     </nav>
@@ -75,7 +74,7 @@
   </div>
 
   <div id="page_container">
-    <form action="action_page.php">
+    <form id="contact-form" action="/api/contact" method="POST">
 
       <label for="name">Name</label>
       <input type="text" id="name" name="name">
@@ -346,14 +345,39 @@
     </footer>
   </div>
 
-
-
-  <!-- <div class="container"> -->
-
-
   <script>
     function submitButton() {
       alert("Thank you for contacting us! We will be with you shortly.");
+    }
+
+    // function onSubmit(e) {
+    //   e.preventDefault()
+    //   console.log('submitted');
+    //   return false
+    // }
+    document.getElementById("contact-form").onsubmit = (e) => {
+  
+      // validation
+      let isValidated = true
+      if (document.getElementById("name").value == "") {
+        alert("please enter name")
+        isValidated = false
+      } else if (document.getElementById("email").value == "") {
+        alert("please enter email")
+        isValidated = false
+      } else if (document.getElementById("subject").value == "") {
+        alert("please enter subject")
+        isValidated = false
+      }
+
+      if (!isValidated) {
+        e.preventDefault()
+        return
+      }
+
+      alert("Thank you for submitting the issue!")
+
+
     }
   </script>
 
