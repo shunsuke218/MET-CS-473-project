@@ -63,7 +63,7 @@ function onLogout(webAuth) {
 
 const logOutOfAuth0 = (webAuth) => {
     webAuth.logout({
-        returnTo: window.location.href,
+        returnTo: getSiteRootFromUrl(window.location.href),
         client_id: CLIENT_ID
       });
 }

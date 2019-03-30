@@ -19,6 +19,7 @@ window.addEventListener('load', function () {
             // console.log(authResult);
             onLoginSuccess(authResult)
             displayButtons(isAuthenticated())
+            window.location = "/tree"
         } else if (err) {
             console.log(err);
         }
