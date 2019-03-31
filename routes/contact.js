@@ -6,7 +6,7 @@ router.post('/', async (req, res, next) => {
     try {
 
         let {name, email, subject, country} = req.body;
-        console.log(req.body);
+        // console.log(req.body);
 
         let emailBody = `${name}: ${subject} from ${country}`
 
