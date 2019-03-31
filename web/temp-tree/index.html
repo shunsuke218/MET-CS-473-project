@@ -45,14 +45,10 @@
     </div>
 
     <div id="page_container">
-        <div id="tree">
+        <div id="family-tree">
             <h1>Demo Family Tree here</h1>
-            <svg>
-                <g class="objects">
-                    <g class="link"></g>
-                    <g class="node"></g>
-                </g>
-            </svg>
+            <div id="wrapper"></div>
+            <button id='saveButton'>Export my D3 visualization to PNG</button>
         </div>
     </div>
     <div id="footer_container">
@@ -70,7 +66,8 @@
 
     <!-- js files only for this page -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
-    <script src="../js/libs/rectCollide.js"></script>
+	<script src="../js/libs/saveSvgAsPng.js"></script>
+	<script src="../js/libs/rectCollide.js"></script>
     <script src="../js/utils/tree.js"></script>
     <script src="./tree.js"></script>
 
