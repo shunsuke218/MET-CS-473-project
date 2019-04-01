@@ -5,20 +5,21 @@
 	--header-height: 60px;
 }
 
-body::-webkit-scrollbar {
-	width: 1em;
-}
-
-body::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+html, body {
+	height: 100%;
 }
 
 #page_container {
+	min-height: 100%;
 	padding: 10px;
 }
 
-#nav-buttons {
-	display: none;
+#home {
+	overflow: auto;
+	padding-bottom: 60px;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
 }
 
 #tree-image {
@@ -28,9 +29,18 @@ body::-webkit-scrollbar-track {
 	background-color: #ebeee7;
 }
 
-body::-webkit-scrollbar-thumb {
-	background-color: darkgrey;
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgb(170, 138, 138);
+	border-radius: 10px;
 	outline: 1px solid slategrey;
+}
+
+#header_container {
+	box-sizing: border-box;
 }
 
 nav {
@@ -40,7 +50,6 @@ nav {
 	align-items: center;
 	height: var(--header-height);
 	background-color: #7cb342;
-	padding: 0 0;
 }
 
 nav>div {
@@ -61,6 +70,10 @@ nav>div {
 	text-transform: uppercase;
 	letter-spacing: 5px;
 	font-size: 20px;
+}
+
+#nav-buttons {
+	display: none;
 }
 
 .btn {
@@ -104,7 +117,6 @@ nav>div {
 .side-nav-links a {
 	font-style: Monospace;
 	font-weight: bold;
-	/* font-size: 20px; */
 	text-decoration: none;
 	color: #5e5656;
 	text-transform: uppercase;
@@ -112,12 +124,11 @@ nav>div {
 
 .side-nav-links a:hover {
 	color: #000000;
-	/* color: #aa0505; */
 }
 
 .burger {
 	display: none;
-	margin-right: 50px;
+	margin-right: 30px;
 }
 
 .burger div {
@@ -128,43 +139,18 @@ nav>div {
 	transition: all 0.3s ease;
 }
 
-@keyframes navLinkFade {
-	from {
-		opacity: 0;
-		transform: translateY(50px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0px);
-	}
-}
-
 #footer {
-	bottom: 0;
-	width: 100%;
-	background-image: rgba(255, 255, 255, 0.24);
+	height: 60px;
+	margin-top: -60px;
+	clear: both;
 	background-color: whitesmoke;
 	color: #7cb342;
 	text-align: center;
 	padding: 20px;
 }
 
-#tree-image {
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: center;
-	background-color: #ebeee7;
-}
-
-#home {
-	text-align: center;
-	align-items: center;
-	justify-content: center;
-}
-
 #start-family-tree {
-	/* margin-right: 474px;
-	margin-left: 474px; */
+	white-space: nowrap;
 	width: 300px;
 	margin: 0 auto;
 	display: flex;
@@ -184,11 +170,8 @@ nav>div {
 	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
-	/* background: #f09413; */
 	background: #727086;
 	color: whitesmoke;
-	/* position: relative;
-	top: 1px; */
 }
 
 #start-family-tree:hover {
@@ -196,18 +179,17 @@ nav>div {
 }
 
 @media screen and (max-width:1024px) {
-	.side-nav-links {
-		width: 0px;
+	.logo {
+		letter-spacing: 3px;
+		font-size: 15px;
 	}
-	body::-webkit-scrollbar {
-		width: 1em;
-	}
-	body::-webkit-scrollbar-track {
-		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-	}
-	body::-webkit-scrollbar-thumb {
-		background-color: darkgrey;
-		outline: 1px solid slategrey;
+	nav {
+		font-size: 12px;
+		box-sizing: border-box;
+		display: flex;
+		white-space: nowrap;
+		justify-content: space-between;
+		align-items: center;
 	}
 }
 
@@ -215,17 +197,10 @@ nav>div {
 	body {
 		overflow-y: hidden;
 	}
-	body::-webkit-scrollbar {
-		width: 1em;
-	}
-	body::-webkit-scrollbar-track {
-		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-	}
-	body::-webkit-scrollbar-thumb {
-		background-color: darkgrey;
-		outline: 1px solid slategrey;
-	}
 	.side-nav-links {
+		margin-top: 60px;
+		/* margin-bottom: 0px; */
+		font-size: 15px;
 		z-index: 1000;
 		position: absolute;
 		left: 0px;
@@ -239,9 +214,6 @@ nav>div {
 		width: 30%;
 		transform: translateY(100%);
 		transition: transform 0.5s ease-in;
-		margin-top: 60px;
-		margin-bottom: 0px;
-		/* padding: 10 10 10 10; */
 	}
 	.side-nav-links li {
 		opacity: 0;
@@ -250,14 +222,20 @@ nav>div {
 		display: block;
 		cursor: pointer;
 	}
-	#start-family-tree {
-		/* margin-left: 300px; */
-		display: flex;
-		flex-direction: row;
-		justify-content: space-around;
-		outline: none;
-		padding: .5em 5.2em .55em;
-		background-position: center;
+	.logo {
+		letter-spacing: 5px;
+		font-size: 20px;
+	}
+}
+
+@keyframes navLinkFade {
+	from {
+		opacity: 0;
+		transform: translateY(50px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0px);
 	}
 }
 
