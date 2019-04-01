@@ -12,7 +12,7 @@ const navSlide = () => {
                 link.style.animation = '';
             } else {
                 link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.5}s`;
-                // console.log(index / 5);
+                console.log(index / 5);
             }
         });
         //burger animation

@@ -1,5 +1,3 @@
-/* put common style here */
-
 * {
 	padding: 0;
 	margin: 0;
@@ -7,16 +5,21 @@
 	--header-height: 60px;
 }
 
-body {
-	overflow-y: hidden;
+html, body {
+	height: 100%;
 }
 
 #page_container {
+	min-height: 100%;
 	padding: 10px;
 }
 
-#nav-buttons {
-	display: none;
+#home {
+	overflow: auto;
+	padding-bottom: 60px;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
 }
 
 #tree-image {
@@ -26,24 +29,27 @@ body {
 	background-color: #ebeee7;
 }
 
-#home {
-	text-align: center;
-	/* background-color:  #ebeee7; */
-	/* background-image: url("./images/familyTree.jpeg") ; 
-  height:100vh ;
-  background-size: cover;
-  background-position: center;    */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgb(170, 138, 138);
+	border-radius: 10px;
+	outline: 1px solid slategrey;
+}
+
+#header_container {
+	box-sizing: border-box;
 }
 
 nav {
 	box-sizing: border-box;
-	z-index: 1000;
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
 	align-items: center;
 	height: var(--header-height);
 	background-color: #7cb342;
-	padding: 0 0;
 }
 
 nav>div {
@@ -54,6 +60,8 @@ nav>div {
 
 #logo-image {
 	height: 40px;
+	margin-right: 10px;
+	margin-left: 10px;
 }
 
 .logo {
@@ -64,19 +72,15 @@ nav>div {
 	font-size: 20px;
 }
 
-#login {
-	margin-right: 10px;
+#nav-buttons {
+	display: none;
 }
 
 .btn {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	outline: none;
 	cursor: pointer;
 	text-align: center;
 	text-decoration: none;
-	font: 14px/100% Arial, Helvetica, sans-serif;
+	font: 14px/100% Monospace, sans-serif;
 	padding: .5em 2em .55em;
 	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
 	-webkit-border-radius: .5em;
@@ -87,7 +91,6 @@ nav>div {
 	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
 	background: #a9cea6;
 	color: #855E42;
-	font-family: Monospace;
 	margin-right: 20px;
 }
 
@@ -96,53 +99,36 @@ nav>div {
 	opacity: 0.7;
 }
 
-.btn:active {
-	position: relative;
-	top: 1px;
-}
-
 .side-nav-links {
-	left: 0px;
-	position: fixed;
-	z-index: 1000;
-	position: absolute;
-	justify-content: space-around;
-	height: 100vh;
-	top: 8vh;
-	background-color: #a9cea6;
 	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 15%;
-	transform: translateY(100%);
-	transition: all 0.5s ease-in;
-	margin-right: 10px;
-	margin-top: var(--header-height);
+	flex-direction: row;
+	justify-content: space-between;
+	list-style: none;
 }
 
 .side-nav-links li {
-    transition: all 0.3s ease-in-out;
-	list-style: none;
-	opacity: 0;
+	display: inline-block;
+	margin-right: 20px;
+	margin-left: 20px;
+	position: relative;
+	letter-spacing: 3px;
 }
 
 .side-nav-links a {
 	font-style: Monospace;
 	font-weight: bold;
-	font-size: 20px;
 	text-decoration: none;
-	display: block;
-	color: rgb(226, 226, 226);
+	color: #5e5656;
+	text-transform: uppercase;
 }
 
 .side-nav-links a:hover {
-	background-color: #817777;
+	color: #000000;
 }
 
 .burger {
-	display: block;
-	cursor: pointer;
-	margin-right: 50px;
+	display: none;
+	margin-right: 30px;
 }
 
 .burger div {
@@ -153,10 +139,93 @@ nav>div {
 	transition: all 0.3s ease;
 }
 
-.nav-active {
-	transition: all 0.3s ease-in-out;
-	transform: translateY(0%);
-	top: 0px;
+#footer {
+	height: 60px;
+	margin-top: -60px;
+	clear: both;
+	background-color: whitesmoke;
+	color: #7cb342;
+	text-align: center;
+	padding: 20px;
+}
+
+#start-family-tree {
+	white-space: nowrap;
+	width: 300px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	padding: .5em 5.2em .55em;
+	background-position: center;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font: 14px/100% Monospace, sans-serif;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+	-webkit-border-radius: .5em;
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+	background: #727086;
+	color: whitesmoke;
+}
+
+#start-family-tree:hover {
+	opacity: 0.7;
+}
+
+@media screen and (max-width:1024px) {
+	.logo {
+		letter-spacing: 3px;
+		font-size: 15px;
+	}
+	nav {
+		font-size: 12px;
+		box-sizing: border-box;
+		display: flex;
+		white-space: nowrap;
+		justify-content: space-between;
+		align-items: center;
+	}
+}
+
+@media screen and (max-width:768px) {
+	body {
+		overflow-y: hidden;
+	}
+	.side-nav-links {
+		margin-top: 60px;
+		/* margin-bottom: 0px; */
+		font-size: 15px;
+		z-index: 1000;
+		position: absolute;
+		left: 0px;
+		height: 92vh;
+		top: 8vh;
+		background-color: #7cb342;
+		flex-direction: column;
+		align-items: left;
+		display: flex;
+		justify-content: space-around;
+		width: 30%;
+		transform: translateY(100%);
+		transition: transform 0.5s ease-in;
+	}
+	.side-nav-links li {
+		opacity: 0;
+	}
+	.burger {
+		display: block;
+		cursor: pointer;
+	}
+	.logo {
+		letter-spacing: 5px;
+		font-size: 20px;
+	}
 }
 
 @keyframes navLinkFade {
@@ -170,6 +239,12 @@ nav>div {
 	}
 }
 
+.nav-active {
+	transition: all 0.3s ease-in-out;
+	transform: translateY(0%);
+	top: 0px;
+}
+
 .toggle .line1 {
 	transform: rotate(-45deg) translate(-5px, 6px);
 }
@@ -180,49 +255,4 @@ nav>div {
 
 .toggle .line3 {
 	transform: rotate(45deg) translate(-5px, -6px);
-}
-
-#footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	background-image: rgba(255, 255, 255, 0.24);
-	background-color: whitesmoke;
-	color: #7cb342;
-	text-align: center;
-	padding: 20px;
-}
-
-#start-family-tree {
-	margin-right: 474px;
-	margin-left: 474px;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	outline: none;
-	cursor: pointer;
-	text-align: center;
-	text-decoration: none;
-	font: 14px/100% Arial, Helvetica, sans-serif;
-	padding: .5em 5.2em .55em;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
-	-webkit-border-radius: .5em;
-	-moz-border-radius: .5em;
-	border-radius: .5em;
-	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
-	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
-	background: #d4810d;
-	color: whitesmoke;
-	font-family: Monospace;
-}
-
-#start-family-tree {
-	text-decoration: none;
-	opacity: 0.9;
-}
-
-#start-family-tree {
-	position: relative;
-	top: 1px;
 }
