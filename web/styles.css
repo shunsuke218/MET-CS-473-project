@@ -140,7 +140,6 @@ nav>div {
 }
 
 #footer {
-	position: fixed;
 	bottom: 0;
 	width: 100%;
 	background-image: rgba(255, 255, 255, 0.24);
@@ -164,8 +163,10 @@ nav>div {
 }
 
 #start-family-tree {
-	margin-right: 474px;
-	margin-left: 474px;
+	/* margin-right: 474px;
+	margin-left: 474px; */
+	width: 300px;
+	margin: 0 auto;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
@@ -250,7 +251,7 @@ nav>div {
 		cursor: pointer;
 	}
 	#start-family-tree {
-		margin-left: 300px;
+		/* margin-left: 300px; */
 		display: flex;
 		flex-direction: row;
 		justify-content: space-around;
