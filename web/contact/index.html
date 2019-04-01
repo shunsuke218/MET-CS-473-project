@@ -46,14 +46,7 @@
 <body>
   <div id="header_container">
     <nav>
-
       <div>
-        <ul class="side-nav-links">
-          <li><a href="#">Home</a></li>
-          <li> <a href="#">View Family Tree</a></li>
-          <li> <a href="#">Search</a></li>
-        </ul>
-
         <div class="burger">
           <div class=line1></div>
           <div class=line2></div>
@@ -61,16 +54,18 @@
         </div>
         <img src="../images/logo.png" alt="logo" id="logo-image">
         <div class="logo">THE FAMILY TREE MAP</div>
-
       </div>
-
+      <ul class="side-nav-links">
+        <!-- <li><a href="index.html" class="current">Home</a></li> -->
+        <li><a href="/">Home</a></li>
+        <li> <a href="#">Export Tree</a></li>
+        <li> <a href="/contact">Contact us</a></li>
+      </ul>
       <div id="nav-buttons">
         <div id="login"><a href="#" id="btn-login" class="btn">Login</a></div>
         <div id="logout"><a href="#" id="btn-logout" class="btn">Log out</a></div>
       </div>
-
     </nav>
-
   </div>
 
   <div id="page_container">
@@ -356,7 +351,7 @@
     //   return false
     // }
     document.getElementById("contact-form").onsubmit = (e) => {
-  
+
       // validation
       let isValidated = true
       if (document.getElementById("name").value == "") {
