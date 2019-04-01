@@ -52,6 +52,7 @@ Steve will handle the merge.
 
 After the code is merged into dev, you can click "Finish" in Pivotal tracker. Then, after the code is deployed to staging server, you can click "Deliver".
 
+Our tester Majda will test the feature after it is "delivered". If there are errors, she will "reject". Or "accept" if there are no errors.
 
 ## Style guide
 
