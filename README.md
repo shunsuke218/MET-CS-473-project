@@ -44,7 +44,14 @@ dev is the main development branch. Code in this branch are deployed to the stag
 
 master is the production branch. Code in this branch are deployed to production (don't exist yet)
 
-Create your own branch when working on a feature. When you done, create a pull request.
+## Development workflow
+
+Create your own branch when working on a feature. When you done, create a pull request to be merged into dev branch.
+
+Steve will handle the merge.
+
+After the code is merged into dev, you can click "Finish" in Pivotal tracker. Then, after the code is deployed to staging server, you can click "Deliver".
+
 
 ## Style guide
 
