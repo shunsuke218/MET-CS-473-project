@@ -1,5 +1,5 @@
 function initSvgTree(nodes, links, changeCb) {
-    const width = 600, height = 500;
+    var width, height;
     const nodewidth = 300, nodeheight = 200, nodeoffset = 30;
     const divwidth = 200, divheight = 150, divoffset = 54;
     // Don't forget to edit .node class of css!!
@@ -18,23 +18,42 @@ function initSvgTree(nodes, links, changeCb) {
     //////////////////////////////////////////////////
     // Set up Layout
     //////////////////////////////////////////////////
-    var svg = d3.select("body")
+	var wrapperDiv = document.getElementById("wrapper");
+
+	// Monitor window size changes
+	d3.select(window).on('resize', resize);
+
+	function resize() {
+		// update width
+		width = parseInt(d3.select(svgFamilyTree).style('width'), 10);
+		height = parseInt(d3.select(svgFamilyTree).style('height'), 10);
+	}
+
+	// Initialize canvas
+    var svg = d3.select(wrapperDiv)
+		.classed("svg-container", true)
+	// Add svg
+        .append("svg")
+		.attr("id", "svg-family-tree")
+		.attr("preserveAspectRatio", "xMinYMin meet")
+		.attr("viewBox", "0 0 600 400")
+	    //class to make it responsive
+		.classed("svg-content-responsive", true)
+	// Add object group
+		.append("g").attr("class","objects")
+		.attr("id", "tree")
+	// Add link group
+	svg.append("g").attr("class", "link");
+	// Add node group
+	svg.append("g").attr("class", "node");
+
+	var svgFamilyTree = document.getElementById("svg-family-tree");
+	resize();
+    svg = d3.select("body")
         .select("svg")
-        .attr("width", document.getElementById("tree").offsetWidth)
-        .attr("height", height)
+        //.attr("width", width).attr("height", height)
         .select(".objects");
 
-    // update tree div width on resize
-    window.addEventListener("resize", (e) => {
-
-        let newTreeDivWidth = document.getElementById("tree").offsetWidth;
-
-        d3.select("body")
-            .select("svg")
-            .attr("width", newTreeDivWidth)
-            .attr("height", height)
-
-    })
 
     var node, link, circle, foreignobj;
 
@@ -53,11 +72,11 @@ function initSvgTree(nodes, links, changeCb) {
         .force("xAxis", d3.forceX(width / 2).strength(0))
         .force("yAxis", d3.forceY(height / 2).strength(0))
         .force('x', d3.forceX()
-            .x(function (d) { return (width / spread) * (spread + d.spread) - 350; })
+            .x(function (d) { return (width / spread) * (spread + d.spread) - width; })
             //.strength(1)
         )
         .force('y', d3.forceY()
-            .y(function (d) { return (height / depth) * (depth + d.depth) - 350; })
+            .y(function (d) { return (height / depth) * (depth + d.depth) - height; })
             //.strength(1)
         )
         .force('collision', rectCollide().size(function (d) { return [d.width + 20, d.height + 20] }))
@@ -75,29 +94,58 @@ function initSvgTree(nodes, links, changeCb) {
         .on("zoom", zoom_actions);
     zoom_handler(d3.select("svg"));
 
+	// Save function
+	
+	d3.select('#saveButton').on('click', function(){
+		//saveSvgAsPng(document.getElementById("tree"), "diagram.png", {scale: 5});
+		saveSvgAsPng(document.getElementById("svg-family-tree"), "diagram.png", {scale: 5});
+	});
+
 
     //////////////////////////////////////////////////
     // Methods
     //////////////////////////////////////////////////
 
     // Handy functions
+	function removeArr(arr, elem) {
+		return arr.filter(function(e){
+			return e !== elem;
+		})
+	}
+	
+
 
     // Find xor of three variables
     function xor(a, b, c) { return (a ^ b ^ c) && !(a && b && c); }
     // Print node information on console
     function printNodes(d) {
         console.log("This node: ", d.id, d.label);
-        console.log("This child: ", d.child);
-        console.log("hasChild: ", d.hasChild);
-        console.log("isMarried: ", d.isMarried);
-        console.log("hasSibling: ", d.hasChild);
+		console.log("---");
+        console.log("Child: ", d.child);
+        console.log("Married: ", d.married);
+        console.log("Sibling: ", d.sibling);
+        console.log("Parent: ", d.parent);
+		console.log("---");
+		console.log("Spread: ", d.spread);
+		console.log("Depth: ", d.depth);
+		console.log("---");
+		console.log("Dob: ", d.dob);
+		console.log("Description: ", d.desc);
         let thislink = findlinks(d);
         let thisnode = findnodes(thislink);
         thisnode.forEach(function (e) {
             console.log("    Connected to: ", e.id, e.label);
-            console.log("    hasChild: ", e.hasChild);
-            console.log("    isMarried: ", e.isMarried);
-            console.log("    hasSibling: ", e.hasSibling);
+			console.log("    ---");
+            console.log("    child: ", e.child);
+            console.log("    married: ", e.married);
+            console.log("    sibling: ", e.sibling);
+            console.log("    parent: ", e.parent);
+			console.log("    ---");
+			console.log("    Spread: ", e.spread);
+			console.log("    Depth: ", e.depth);
+			console.log("    ---");
+			console.log("    Dob: ", e.dob);
+			console.log("    Description: ", e.desc);
         })
     }
     // Return selector of links of given node d.	
@@ -107,7 +155,7 @@ function initSvgTree(nodes, links, changeCb) {
         })
     }
     // Return selector of nodes of given link list.
-    function findnodes(links) {
+   function findnodes(links) {
         return nodes.filter(function (e) {
             let nodetest = false;
             links.each(function (f) {
@@ -117,6 +165,7 @@ function initSvgTree(nodes, links, changeCb) {
             return nodetest;
         });
     }
+
     // Check if array contains element.
     // Could be deleted as basic JS Array must support this feature by default
     function includes(array, elem) {
@@ -149,36 +198,25 @@ function initSvgTree(nodes, links, changeCb) {
         // # of children of this node
         let directchild = d.child || [];
 
-        // Change tag if more than one siblings
-        if (directchild.length > 0) child.hasSibling = true;
+		// Set child information
+		child.married = [];
+		child.child = [];
+		child.sibling = d.child.slice();
+		child.parent = [d.id];
 
-        // Record to the node that child has been added
+		// Edit children's sibling
+		nodes.forEach(function(e){
+			if (!!~directchild.indexOf(e.id)){
+				let sibling = e.sibling||[];
+				sibling.push(child.id);
+				e.sibling = sibling;
+			}
+		})
+
+        // Edit this child
         directchild.push(child.id);
         d.child = directchild;
 
-        // Change tag of self/neighbors
-        if ((directchild.length == 2) ||
-            (directchild.length == 1 && d.connection)) {
-            // Find parents from this connection node
-            let thislink = findlinks(d);
-            let thisnode = findnodes(thislink);
-            if (directchild.length == 2) {
-                // If exactly 2 children,
-                // the first child's .hasSibling must be true
-                thisnode.forEach(function (e) {
-                    if (directchild.includes(e.id))
-                        e.hasSibling = true;
-                })
-            } else if (d.connection) {
-                // As for the connection node,
-                // parents .hasChild must be true.
-                thisnode.forEach(function (e) {
-                    if (!directchild.includes(e.id))
-                        e.hasChild = true;
-                })
-            }
-        }
-        if (!d.connection) d.hasChild = true;
         restart();
     }
 
@@ -190,8 +228,14 @@ function initSvgTree(nodes, links, changeCb) {
         let spouse = addNode(connection, connection.depth, connection.spread + s);
 
         // Change tag of self and spouse
-        d.isMarried = true; spouse.isMarried = true;
-
+		d.married = d.married||[];
+		d.married.push(spouse.id);
+		d.married.push(connection.id); //should I add connection in married arr?
+		
+		spouse.married = spouse.married||[];
+		spouse.married.push(d.id);
+		spouse.married.push(connection.id); //should I add connection in married arr?
+		
         restart();
     }
     function addParent(d, s = 1) {
@@ -202,10 +246,12 @@ function initSvgTree(nodes, links, changeCb) {
         let dad = addNode(connection, connection.depth, connection.spread - s);
 
         // Change tag of self and spouse
-        mom.isMarried = true; mom.hasChild = true;
-        dad.isMarried = true; dad.hasChild = true;
+		mom.married = [connection.id, dad.id]; //should I add connection in married arr?
+		dad.married = [connection.id, mom.id]; //should I add connection in married arr?
 
-
+		mom.child = [d.id];
+		dad.child = [d.id];
+		d.parent = [connection.id];
         restart();
     }
 
@@ -217,13 +263,16 @@ function initSvgTree(nodes, links, changeCb) {
         var tmpnode = {
             id: numid, label: name,
             "height": nodeheight, "width": nodewidth,
-            "spread": spread, "depth": depth
+            "spread": spread, "depth": depth,
+			"child":[], "married":[], "sibling":[], "parent":[]
         };
-        // For connection node, needs connection and child fields
-        if (connection) {
-            tmpnode["connection"] = true;
-            tmpnode["child"] = [];
-        }
+        // For connection node, needs connection
+        if (connection)
+			tmpnode["connection"] = true;
+		else {
+			tmpnode["dob"] = "2000/01/01";
+			tmpnode["desc"] = "Added Node";
+		}
 
         // New link's info
         let tmplink = { id: numid, source: d, target: numid };
@@ -247,34 +296,44 @@ function initSvgTree(nodes, links, changeCb) {
         // (1.) Link must be 1
         // (2-a.) one of isMarried, hasChild, or hasSibling must be true. 
         // (2-b.) none of isMarried, hasChild, or hasSibling is true. (child of couple)
+		// (3.) Me (the origin) cannot be deleted
 
         // Find the link
         let connectedlink = findlinks(d);
-        if ((connectedlink.size() == 1 && xor(d.hasChild, d.isMarried, d.hasSibling)) ||
-            (connectedlink.size() == 1 && (!d.hasChild && !d.isMarried && !d.hasSibling)) ||
+		let hasChild = (d.child == null) ? false : !!(d.child.length);
+		let isMarried = (d.married == null) ? false : !!(d.married.length);
+		let hasSibling = (d.sibling == null) ? false : !!(d.sibling.length);
+
+        if ((connectedlink.size() == 1 && xor(hasChild, isMarried, hasSibling)) ||
+            (connectedlink.size() == 1 && (!hasChild && !isMarried && !hasSibling)) ||
             (d.connection)
         ) {
             // The node can be deleted
             // Find the node that is connected
             let connectednode = findnodes(connectedlink);
+			console.log("Deleting: ",d.label);
 
-            if (d.hasChild) {
+			console.log("hasChild: "  +  hasChild);
+			console.log("isMarried: " +  isMarried);
+			console.log("hasSibling: " +  hasSibling);
+            if (hasChild) {
                 console.log("hasChild");
                 removeHasChild(d);
-            } else if (d.isMarried) {
+            } else if (isMarried) {
                 console.log("isMarried");
                 removeIsMarried(d, connectednode);
-            } else if (d.hasSibling) {
+            } else if (hasSibling) {
                 console.log("hasSibling");
                 removeHasSibling(d, connectednode);
             } else {
                 console.log("no child, not married, no sibling!");
-                removeHasSibling(d, connectednode);
+                removeHasSibling(d);
             }
         } else {
             // The node cannot be deleted
             console.log("The node cannot be deleted!");
         }
+		console.log("removed.");
         recalculate();
         restart();
     }
@@ -284,73 +343,114 @@ function initSvgTree(nodes, links, changeCb) {
         // Remove this node and link and done
         links = removeLinks(links, d);
         nodes = removeNodes(nodes, d);
+
+		// Remove this from child
+		let thisid = d.id;
+		let thischild = d.child;
+
+		// Filter child
+		let child = nodes.filter(function (e){
+			return (!!~thischild.indexOf(e.id) );
+		});
+
+		let newparent = child.parent||[];
+		child.parent = removeArr(newparent, thisid);
+		
     }
-    function removeIsMarried(d, connectednode) {
+    function removeIsMarried(d) {
         // Has spouse but nothing else
+
+		// Filter Married
+		let thismarried = d.married||[];
+		let thisid = d.id;
+		let married = nodes.filter(function (e){
+			return (!!~thismarried.indexOf(e.id));
+		})
+
+		// Check if there is a child for this node
+		let flag = false;
+		married.forEach(function (e){
+			if (!flag && e.connection && e.child.length > 0)
+				flag = true;
+		})
+
+		if (flag) return;
+
+		
         // Remove this node and link
         links = removeLinks(links, d);
         nodes = removeNodes(nodes, d);
 
-        // Find nodes of connection node
-        let connection, connectionlink, connectionnode;
-        connectednode.forEach(function (nd) {
-            connection = nd.connection ? nd : connection;
-        })
-        connectionlink = findlinks(connection);
-        connectionnode = findnodes(connectionlink);
-        // Set spouse.isMarried to false
-        connectionnode.forEach(function (e) {
-            e.isMarried = false;
-        })
-        // Remove connection node
-        removeNode(connection);
+		// Remove this from married connection
+		let connection = null;
+		married.forEach(function (e){
+			console.log("    ", e.id, ": ", e.label);
+			let newmarried = e.married||[];
+			newmarried = removeArr(newmarried, thisid);
+			thismarried.forEach(function(f){
+				newmarried = removeArr(newmarried, f);
+			})
+			//e.married = newmarried.filter(x => !thismarried.includes(x));
+			console.log("    married: ", e.married);
+			e.married = newmarried;
+		})
+		married.forEach(function (e){
+			if (e.connection) removeNode(e);
+		})
+
     }
 
+	function removeAloneNode(d) {
+		links = removeLinks(links, d);
+        nodes = removeNodes(nodes, d);
+
+	}
+	
     function removeHasSibling(d, connectednode) {
         // Has sibling(s) but nothing else
+
         // Remove this node and link
-        let thisid = d.id;
         links = removeLinks(links, d);
         nodes = removeNodes(nodes, d);
 
-        // Find nodes of connection node
-        let connection, connectionlink, connectionnode;
-        connectednode.forEach(function (nd) {
-            // This allows direct child from a node
-            // connection = nd.connection ? nd : connection;
-            connection = nd;
-        })
-        printNodes(connection);
-        connectionlink = findlinks(connection);
-        connectionnode = findnodes(connectionlink);
+		// Remove this from sibling and parent(s)
+		let thisid = d.id;
+		let thissibling = d.sibling||[];
+		let thisparent = d.parent||[];
 
-        // Remove d from connectednode's children list
-        let siblings = false;
-        connectednode.forEach(function (nd) {
-            if (!siblings) siblings = nd.child;
-        })
-        let index = siblings.indexOf(thisid);
-        console.log(siblings)
-        if (index !== -1) siblings.splice(index, 1);
-        console.log(siblings)
-        connectednode.child = siblings
+		// Filter Sibling
+		let sibling = nodes.filter(function (e){
+			return (!!~thissibling.indexOf(e.id) );
+		});
 
-        if (siblings.length == 1) {
-            // If there is no more child left,
-            // change parents' hasChild.false
-            console.log("one more child!");
-            connectionnode.forEach(function (e) {
-                if (e.id === siblings.length[0])
-                    e.hasSibling = false;
-            })
-        } else if (siblings.length == 0) {
-            // If there is one more child left,
-            // change sibling's hasSibling.false
-            console.log("no more child!");
-            connectionnode.forEach(function (e) {
-                e.hasChild = false;
-            })
-        };
+		// Removing this from sibling's sibling list
+		sibling.forEach(function (e){
+			let newsibling = e.sibling||[];
+			e.sibling = removeArr(newsibling, thisid);
+		})
+
+		// Filter connection
+		let parent = nodes.filter(function (e){
+			return (!!~thisparent.indexOf(e.id));
+		})
+
+		let married = null;
+		// Remove this from connection(s)
+		parent.forEach(function (e){
+			let newchild = e.child||[];
+			married = e.married||[];
+			e.child = removeArr(newchild, thisid);
+		})
+
+		// Filter connection's spouses
+		parent = nodes.filter(function (e){
+			return (!!~married.indexOf(e.id));
+		})
+		// Remove this from parent(s)
+		parent.forEach(function(e){
+			let newchild = e.child||[];
+			e.child = removeArr(newchild, thisid);
+		})
     }
 
     function removeNodes(array, elem) {
@@ -362,6 +462,76 @@ function initSvgTree(nodes, links, changeCb) {
         return array.filter(el => (el.source.id != elem.id) && (el.target.id != elem.id));
     };
     ///-------------------------
+	// Edit the node
+
+	function editNodeContent(d){
+		var editVariableList = {
+		}
+
+		console.log("will edit this content");
+		console.log(d);
+		console.log(this);
+
+		let id = this.id;
+		let parent = this.parentNode;
+		let thisNode = d3.select(this);
+		let parentNode = d3.select(parent);
+
+		let thissize = thisNode.node().getBoundingClientRect()
+		let thiswidth  = thissize.width;
+		let thisheight  = thissize.height;
+
+		let input = d3.select(parent)
+      		// Add form
+			.insert("xhtml:form", "#" + id + " + *")
+			.append("input")
+			.attr("id", id + "-form")
+			.attr("style", "width: " + thiswidth/2 + "px;")
+		    // Initiate form
+			.attr("value", function(){
+				thisNode.style("display", "none");
+				this.focus();
+			})
+		    // Form out of focus
+			.on("blur", function() {
+				updateD(updateThis());
+            })
+		    // Form edited
+            .on("keypress", function() {
+                // IE fix
+                if (!d3.event) d3.event = window.event;
+                var event = d3.event;
+				// Enter is pressed
+                if (event.keyCode == 13) {
+                    if (typeof(event.cancelBubble) !== 'undefined') // IE
+                        event.cancelBubble = true;
+                    if (event.stopPropagation) event.stopPropagation();
+                    event.preventDefault();
+					updateD(updateThis());
+                }
+            })
+		
+		function updateThis() {
+			let txt = input.node().value;
+			if (txt.match(/^[0-9a-zA-Z !?-_\./,]+$/g))
+				thisNode.text(function(d) { return txt; });
+			thisNode.style("display", "block")
+            parentNode.select("#" + id +"-form").remove();
+			return txt;
+        }
+		function updateD(newinput){
+			if (id === "node-name") {
+				d.label = newinput;
+			} else if (id === "node-dob") {
+				d.dob = newinput;
+			} else if (id === "node-desc") {
+				d.desc = newinput;
+			}
+		}
+	}
+
+	
+    ///-------------------------
     // Mouse over action
     function mouseoverNode(d, i) {
         simulation.alpha(0.1);
@@ -369,6 +539,7 @@ function initSvgTree(nodes, links, changeCb) {
         let connectedlink = link.filter(function (e) {
             return (e.source.id === d.id) || (e.target.id === d.id);
         });
+
 
         // Expand foreignObject
         let fo = d3.select(this).select("foreignObject")
@@ -401,8 +572,29 @@ function initSvgTree(nodes, links, changeCb) {
             .style("display", "block")
             .style("opacity", 1);
 
+
+		let thismarried = d.married||[];
+		let thischild = d.child||[];
+		let thissibling = d.sibling||[];
+		let thisparent = d.parent||[];
+
+		let haschild = false;
+		if (thismarried.length > 0){
+			let married = nodes.filter(function (e){
+				return (!!~thismarried.indexOf(e.id) && e.connection);
+			})
+			married.forEach(function (e){
+				let connchild = e.child||[];
+				if (!haschild && connchild.length > 0)
+					haschild = true;
+			})
+		}
+
+
         // Show delete circle
-        if (connectedlink.size() == 1) {
+        if (thismarried.length + thischild.length + thissibling.length + thisparent.length <= 2
+			&& thismarried.length <= 2
+			&& !haschild ) {
             d3.select(this).select(".deletecircle")
                 .style("display", "block")
                 .transition().duration(250)
@@ -491,6 +683,7 @@ function initSvgTree(nodes, links, changeCb) {
 
     // Recalculate coordinate
     function recalculate() {
+		if (links.length < 3) return;
         let spread_min = Math.min.apply(Math, nodes.map(function (o) { return o.spread })),
             spread_max = Math.max.apply(Math, nodes.map(function (o) { return o.spread })),
             depth_min = Math.min.apply(Math, nodes.map(function (o) { return o.depth })),
@@ -500,14 +693,13 @@ function initSvgTree(nodes, links, changeCb) {
 
         simulation
             .force('x', d3.forceX()
-                .x(function (d) { return (width / spread) * (spread + d.spread) - 350; })
-                .strength(0.5)
-            )
-            .force('y', d3.forceY()
-                .y(function (d) { return (height / depth) * (depth + d.depth) - 350; })
+                .x(function (d) { return (width / spread) * (spread + d.spread) - width ; })
                 .strength(1)
             )
-
+            .force('y', d3.forceY()
+                .y(function (d) { return (height / depth) * (depth + d.depth) - height ; })
+                .strength(0.5)
+            )
         return [spread, depth];
     }
 
@@ -519,7 +711,7 @@ function initSvgTree(nodes, links, changeCb) {
     // Restart -- Add/Remove nodes and add to html
     function restart() {
         // Link objects
-        link = svg.select(".link").attr("stroke-width", 1.5).selectAll('line')
+        link = svg.select(".link").attr("stroke-width", 6).selectAll('line')
             .data(links, function (d) { return d.target.id; });
         //    Removed links
         var linkExit = link.exit().remove();
@@ -541,7 +733,7 @@ function initSvgTree(nodes, links, changeCb) {
             .on("mouseover", mouseoverNode)
             .on("mouseout", mouseoutNode)
             .attr("class", function (d) { return (d.connection) ? "node-connection" : "node"; });
-
+            
         nodeEnter
             .each(function (d) {
                 // console.log(this);
@@ -562,6 +754,7 @@ function initSvgTree(nodes, links, changeCb) {
                 group
                     // ForeignObject (the HTML on top of svg)
                     .append("foreignObject")
+					.on("mousedown", function (d) { printNodes(d);})
                     .call(drag_handler)
                     .attr("id", function (d) { return "node-" + d.id; })
                     .attr("width", nodewidth + "px")
@@ -569,35 +762,46 @@ function initSvgTree(nodes, links, changeCb) {
                     .attr("class", "node")
                     // HTML content wrapper (will expand on mouse hover)
                     .append("xhtml:div")
+					.attr("xmlns", "http://www.w3.org/1999/xhtml")
                     .style("width", divwidth + "px")
                     .style("height", divheight - divoffset + "px")
                     .attr("class", "node-div")
+
                     .each(function (d) {
                         let div = d3.select(this);
                         div
                             // img
                             .append("xhtml:img")
+							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .attr("class", "profilepic")
-                            .attr("src", "../../images/profile.png")
+                            //.attr("src", "./views/pages/image/profile.png")
+                            .attr("src", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIABAMAAAAGVsnJAAAAIVBMVEUAAAB+fX1+fX1+fX1+fX1+fX1+fX1+fX1+fX1+fX1+fX1I2PRsAAAACnRSTlMAF/ClME+Kb9vEsIrXWQAACWpJREFUeNrs3T1rVEEUBuBzs1+JlbGImkpREW6lVrqVhBBCKhESIZWCIqTSgEZSKSrCVordVrrxY/P+SouEJG7uzH7k3rBz3vf5CYe9Z87MOTNrIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiMo755fWdty931pfnjU/25EGOI73vby4akWzjPk75+IIlBtlGF4X2OUKw0kXQ/nPzrnEPUTcemWsrOYboef4RZO8wgi9uM0Gri5HsvzKXWh2MqO8yApdzjKz32txZyDGG3jNzZiEHmCPQyjGm3lNzpNHB2PqOSqKsjQns+akHtjGR2+bEKib02VyoYWJ3zYF6BxPrP7T0HSYA2jRQAwDij+DgAyD+CLYBgPgjqOHM7ljKujizfUvYVZTgmyUr66AE/XT3BKsoxSdLVD1HKXqpLoWPUZJblqQGSpPm2cgSSnPTEnSQAYizwBWU6IMl57gGIK0F5lCqr5aaLk4g3BHU8B++TeEuSvbXklJH6dJaCQ/XQN6VsI3S7VlCWqhASmMjSzhCuSE4UQVyVoPHRQBpKbCJSvy2VHRQib4looUjnOvAJVTkuqWhjRMIa6EGBrAdjs6iMu8tBVuozB9LQIYKpVAMNlGhFOZnBxdBuoVwMAWwJYEsR4V6058EmhjAlgROpQC2JLCLAkyn4zkq1bMp10IBpi3xHIoQdUnXULFfNt22UISoFOqgGMvBYB1BHE3SGkJIugMzqNw1m2abCCFpj7QRQnI0jHNgU6yBCIaz8SbCKI4E5hBCshtYxDn4adNrE0Ec6+AWwii2Qx2EMWyHMkT57481EENQCDQRQ1AI1BBDsCGeRZz7MYkLOBc/bFqtIc79wfAmYghKwV1E+e8PthHl/0yoizj3V+hyRLnvEGeIYNgM0Aegjjj33TH6ADQQ5X8/rACgGE0AWhjC+6AUfQCaiPJ/JqYAoJgCwBIA+iSoAKAYTQDoK0EFAMVoAkB/HkAfAEMUwahkB1H+Z2ToGyP0rbEtxBDMydG3x+kHJBYxhPdh4RlE+b81NIc49/Py9IOS9KOy9MPS9OPysVqYoRIeNijofkwwVgpSFILDxsXdD4vr4qSuzlqOIPdzoro+rwcU9ISGHlEJLgMsi0BoGaBZBPSUlh5To39Or4FTqHKgntQsyIJUOTDQHWLoCgVrQaY6MHQ0znEkrsfV9by+/mAh+L4+0ev6+pOVgSTAlwKKrg24vyjwj70zeXUiCMJ4jU4UPAUjbifFfU4qLpiTG6i3EHHBkwvicnI/eFJRwdxcEMlJJwpaf6XPjDGTWXq6J/Owa7763QR5PNvpqq++qu6umpds/4SkyRMA8gKKEiFcEtQHF/XJTX10VZ/dnecByBygT2/r4+v6/H76BF37z8pVTAwiTAeWSgFMETAPg7ghcNYlBeqJFqlBVBU4YyOeF7ZIGHFjxMJyYMJpbozdJJEwwv4AiE5jfwBEYYT9ARCd50Z4TVIJRqgaYMY2boD3JJg+YhWQZj2YE5ZnyEuyh2QTjpaMgGJT4IweL8UhEs8jXoJ9JJLgRvoPY67Nr7QE2CxHDzyKTzaSCeIHC8JazOdwNRO7L3BNPmXyyRsSwYXcWP/9BmbCOsmKCKCXt/HDca0AcJJSPJeSFNZHBeMsnVENBTAoGLuJvdeF/4TPJLss7gEwTV+KMLpf0srZ7LgC8Q1Ks1bKsOjVTA6f03NWgIVawvNU0DOUMZuj2v//NBSijjuRaaxvy8g6/j00DR7G3p6cC/plQjahM7bMfwMiMojpia+aeFhVy4eH2YJdJ7M/V4hHsM5itvVixBXER3M/V8jMbDA2V3MJnYqPYNfA6uf6uAmGdvV8cHFkiH5Hu/nSUohRttbQ1DAugfmfT+eFDI6HIwdPK7j8gXMcuN11cNR++SaJhwZNX8Smyyei1F/6ePtUSWklxC1eZ6xqiwnOXrry7NaxO08vnS2LaeFYSr+gb/I1aofs4L6UjtE2s7VbcwWCR1J6hlWDAHtrrUBwU0zPZMjc/AoEN8V0zdYxN78CwU05p8j6XM3kJDkR9uV0zteyDZMBOdDpy5mgtm19xUfImjMRF+BpUbSNbXlr+esGdyWNz7gMQv16SBZsGYsaoDrPLhyvjIXhY1kjdKGr329egvBxJGyI8rR7y+t4l0oIHo+kjdHWmob9eexJwRoE526N5M3RnuZ6xB+fLvzi4ZUTkcRJ6qXGofe/+7hiBqxYAie+vJI6Sr2VPeAluePVMLTgYWovPoD/+AkEY/YC54rA07OR8k5V9tkTJuSG79cFSblg6Bp7ww9ywts7EmTdrrCRPWInWdE+EeQmhtqZA50zof8XZ4q4bLPDnjEgCzwwAjLIPWHvVQh0u2zQz1typN2z85y9w0INemKFZRB5zYQnTojjQ4xtLITdimKfzoT/RagU8KoOcquIPL87W8ge8HQHGPYAxg4w7QGAHFC1B9pcCFbuAZQdULoHUHZA6R6A2QHmPSDqgXWf6wHPzEAna9D3d5REvMTkoRdk4Qu1syPo4Au12Q218UYRCiHTYTIQGVgqBnGSYHkibOdQgO2oAFASNCdCb9/PSZDxGo/HlWBZRYgWAnJBAC0EZIMAXAjIBQG0EJANAnghIBME8ELAagaB7SyCb5QCqxBY7XLAazdsTkwLAHkBxZ4AiCFeao7j2IGFxiCeDFpFKRSwGLo0p5VnhP7PGaI1LIYdNKfV47E2D5S2fjasiF+UgBoD01EQUAcuaEFEHbioBcHssLwtBlcLZytimL64oUsOMBxmGhcD8wOzviCkEE6JYUQzIGUJ4CaBJA0AJ4F0GsBqCmXbQ6CVwGI10Mr7EuxvVADrimX6Y7hZcJYHAS3xjDWO1hbMNAiBs+A0DyJnwb95ELUW/FsPohqCCS+wZQDzN2wZMBUCuMXwv4IYsS22Ou0xFgitAKyDpkoIWQcxPyBoHcR8EFsHNauENrBAvtIKiJ3hGd+xhWAiBQHnoxYnpWANsT9MsJXwVAvjOoKJK4g5ITenS6DTITMG2KUA8wMCnBNPc10XQBdAY4BmAYD7w8qIu1oLqB8AnQaua2OkQbaxON7TlJY9Lfj/HiFcLywTxg+oYXqiViA+RI3TufeKhbD/84AURVEURVEURVEURVEURVEURVEURVEURVEURVEURVEURVEURVEURfndHhyQAAAAAAj6/7ofoQIAAAAAAAAAAPwEGcG4SMHdcSkAAAAASUVORK5CYII=")
                             .attr("alt", "profile pic")
                         div
                             // h3 (name)
                             .append("xhtml:h3")
+							.attr("id", "node-name")
+							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .text(function (d) { return d.label; })
-                        //div
-                        //    // h2 (depth, spread)
-                        //	.append("xhtml:h4")
-                        //	.text(function(d){ return d.spread + ", " + d.depth; })
+							.on("dblclick", editNodeContent)
                         div
                             // h2 (dob)
                             .append("xhtml:h4")
+							.attr("id", "node-dob")
+							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .text(function (d) { return d.dob; })
+							.on("dblclick", editNodeContent)
                         div
                             .append("xhtml:div")
+							.attr("id", "node-desc")
+							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .attr("class", "description")
                             .text(function (d) { return d.desc; })
+							.on("dblclick", editNodeContent)
                             .attr("display", "none").style("opacity", 0)
                     })
+
+
 
                 // Four circles on sides
                 group
@@ -640,8 +844,6 @@ function initSvgTree(nodes, links, changeCb) {
         simulation.force("link").links(links);
         recalculate();
         simulation.alpha(1).restart();
-
-        changeCb(nodes, links);
     }
 
 
