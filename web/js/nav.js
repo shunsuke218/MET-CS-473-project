@@ -9,9 +9,7 @@ window.addEventListener('load', function () {
         clientID: CLIENT_ID,
         responseType: 'token id_token',
         scope: 'openid profile read:tree write:tree',
-        redirectUri: "http://localhost:5005",
-
-        // redirectUri: getSiteRootFromUrl(window.location.href) + "/tree",
+        redirectUri: getSiteRootFromUrl(window.location.href),
         audience: 'bucs473familytreeapi',
     });
 
