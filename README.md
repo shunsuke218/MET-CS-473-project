@@ -38,6 +38,14 @@ Go to localhost:5005 in your browser. You should be able to see the website in a
 
 The staging server is located at https://cs473testing.stevemu.com
 
+## Branching
+
+dev is the main development branch. Code in this branch are deployed to the staging server.
+
+master is the production branch. Code in this branch are deployed to production (don't exist yet)
+
+Create your own branch when working on a feature. When you done, create a pull request.
+
 ## Style guide
 
 * Use web folder, which contains the updated architecture
