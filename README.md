@@ -65,6 +65,7 @@ Our tester Majda will test the feature after it is "delivered". If there are err
 ## Built With
 
 * [D3.js](https://d3.js.org/) - JavaScript library to visualize node/link data
+* [Auth0](auth0.com) - 3rd party authentication service
 
 ## Versioning
 
@@ -76,7 +77,7 @@ For the versions available, see the [tags on this repository](https://github.com
 ## Authors
 
 * **Shunsuke Haga** - *Front End* - [Repo](https://github.com/shunsuke218)
-* **Steve Mu**  - *Back End* 
+* **[Steve Mu](https://github.com/stevemu)**  - *Architector* 
 
 ## License
 
