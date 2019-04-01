@@ -851,9 +851,9 @@ function initSvgTree(nodes, links, changeCb) {
     function ticked() {
 
         //check when the link is empty.
-        if (links.length == 0) {
-            return
-        }
+        // if (links.length == 0) {
+        //     return
+        // }
 
         // foreignObject
         node.select("foreignObject")
