@@ -8,38 +8,39 @@
 
     <!-- styles -->
     <link rel="stylesheet" type="text/css" href="./styles.css">
+    <script src="https://cdn.auth0.com/js/auth0/9.10/auth0.min.js"></script>
+
 </head>
 
 <body>
-    <!-- <a href="#" id="btn-login">Login</a> -->
-
-    <nav>
-        <div>
-            <div class="burger">
-                <div class=line1></div>
-                <div class=line2></div>
-                <div class=line3></div>
+    <div id="header_container">
+        <nav>
+            <div>
+                <div class="burger">
+                    <div class=line1></div>
+                    <div class=line2></div>
+                    <div class=line3></div>
+                </div>
+                <img src="../images/logo.png" alt="logo" id="logo-image">
+                <div class="logo">THE FAMILY TREE MAP</div>
             </div>
-            <img src="./images/logo.png" alt="logo" id="logo-image">
-            <div class="logo">THE FAMILY TREE MAP</div>
-        </div>
-        <ul class="side-nav-links">
-            <!-- <li><a    href="index.html" class="current">Home</a></li> -->
-            <li><a href="#">Home</a></li>
-            <li> <a href="#">Export Tree</a></li>
-            <li> <a href="#">Contact us</a></li>
-        </ul>
-        <div>
-            <div id="login"><a href="#" id="btn-login" class="btn">Login</a></div>
-            <div id="logout"><a href="#" id="btn-logout" class="btn">Log out</a></div>
-        </div>
-    </nav>
+            <ul class="side-nav-links">
+                <!-- <li><a href="index.html" class="current">Home</a></li> -->
+                <li><a href="#">Home</a></li>
+                <li> <a href="#">Export Tree</a></li>
+                <li> <a href="#">Contact us</a></li>
+            </ul>
+            <div id="nav-buttons">
+                <div id="login"><a href="#" id="btn-login" class="btn">Login</a></div>
+                <div id="logout"><a href="#" id="btn-logout" class="btn">Log out</a></div>
+            </div>
+        </nav>
+    </div>
 
     <div id="page_container">
         <div id="home">
             <img src="./images/familyTree.jpeg" alt="tree" id="tree-image">
-            <a href="#" id="start-family-tree">Start Your Family Tree</a>
-            <a href="/tree">View your tree</a>
+            <div><a href="/temp-tree" id="start-family-tree">Work On Your Temporary Family Tree Without Logging In</a></div>
         </div>
     </div>
 
@@ -58,7 +59,11 @@
 
 
     <!-- js files only for this page -->
-
+    <script>
+        if (isAuthenticated()) {
+            window.location.href = "/tree"
+        }
+    </script>
 </body>
 
 </html>

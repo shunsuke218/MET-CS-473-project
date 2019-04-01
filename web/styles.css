@@ -13,6 +13,21 @@ body::-webkit-scrollbar-track {
 	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
+#page_container {
+	padding: 10px;
+}
+
+#nav-buttons {
+	display: none;
+}
+
+#tree-image {
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	background-color: #ebeee7;
+}
+
 body::-webkit-scrollbar-thumb {
 	background-color: darkgrey;
 	outline: 1px solid slategrey;

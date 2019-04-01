@@ -4,14 +4,12 @@ let bodyParer = require('body-parser');
 var history = require('connect-history-api-fallback');
 const MongoClient = require('mongodb').MongoClient;
 
+
 const app = express();
 app.use(bodyParer.json({ limit: '5000mb' }));
+app.use(bodyParer.urlencoded());
 app.set("port", 5005);
-// app.use(history({
-//     index: 'index.html'
-// }));
 
-app.use("/", express.static("web"));
 
 // connect mongodb
 (async function () {
@@ -35,6 +33,8 @@ app.use("/", express.static("web"));
     }
 
     app.use("/api/tree", require("./routes/tree"));
+    app.use("/api/contact", require("./routes/contact"));
+    app.use("/", express.static("web"));
 
     app.listen(app.get("port"), () => {
         console.log(`Find the server at: http://localhost:${app.get("port")}/`); // eslint-disable-line no-console

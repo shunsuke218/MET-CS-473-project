@@ -20,14 +20,12 @@ function initSvgTree(nodes, links, changeCb) {
     //////////////////////////////////////////////////
     var svg = d3.select("body")
         .select("svg")
-        .attr("width", width)
+        .attr("width", document.getElementById("tree").offsetWidth)
         .attr("height", height)
         .select(".objects");
 
     // update tree div width on resize
     window.addEventListener("resize", (e) => {
-        console.log(e);
-        console.log('resize');
 
         let newTreeDivWidth = document.getElementById("tree").offsetWidth;
 
@@ -649,6 +647,12 @@ function initSvgTree(nodes, links, changeCb) {
 
     // Tick function -- executed whenever there is an action
     function ticked() {
+
+        //check when the link is empty.
+        if (links.length == 0) {
+            return
+        }
+
         // foreignObject
         node.select("foreignObject")
             .attr("x", function (d) { return d.x; })
