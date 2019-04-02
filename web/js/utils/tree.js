@@ -1,103 +1,109 @@
 function initSvgTree(nodes, links, changeCb) {
     var width, height;
-    const nodewidth = 300, nodeheight = 200, nodeoffset = 30;
-    const divwidth = 200, divheight = 150, divoffset = 54;
+    const nodewidth = 300, nodeheight = 300, nodeoffset = 20;
+    const nodewidthexp = 400, nodeheightexp = 500, divoffset = 54;
+    //const divwidth = 200, divheight = 150, divoffset = 54;
+	//const divwidth = 200, divheight = 200, divoffset = 54;
+	//const divwidthexp = 400, divheightexp = 300;
     // Don't forget to edit .node class of css!!
 
-    var numNodes = 100;
 
     nodes.forEach(function (tmpnode) {
         tmpnode["width"] = nodewidth;
         tmpnode["height"] = nodeheight;
     });
 
+    var numNodes = 100;
     var numid = nodes.length;
-    //var coord = recalculate();
-    var depth = 4, spread = 3;
+    var depth = 1, spread = 1;
 
     //////////////////////////////////////////////////
     // Set up Layout
     //////////////////////////////////////////////////
 	var wrapperDiv = document.getElementById("wrapper");
 
-	// Monitor window size changes
-	d3.select(window).on('resize', resize);
-
-	function resize() {
-		// update width
-		width = parseInt(d3.select(svgFamilyTree).style('width'), 10);
-		height = parseInt(d3.select(svgFamilyTree).style('height'), 10);
-	}
 
 	// Initialize canvas
     var svg = d3.select(wrapperDiv)
 		.classed("svg-container", true)
-	// Add svg
+	     // Add svg
         .append("svg")
 		.attr("id", "svg-family-tree")
 		.attr("preserveAspectRatio", "xMinYMin meet")
 		.attr("viewBox", "0 0 600 400")
-	    //class to make it responsive
 		.classed("svg-content-responsive", true)
-	// Add object group
-		.append("g").attr("class","objects")
+	     // Add object group
+		.append("g")
+		.attr("class","objects")
 		.attr("id", "tree")
 	// Add link group
 	svg.append("g").attr("class", "link");
 	// Add node group
 	svg.append("g").attr("class", "node");
 
+	// Monitor window size
+	d3.select(window).on('resize', resize);
 	var svgFamilyTree = document.getElementById("svg-family-tree");
+	function resize() {
+		// update width, height
+		width = parseInt(d3.select(svgFamilyTree).style('width'), 10);
+		height = parseInt(d3.select(svgFamilyTree).style('height'), 10);
+	}
+
 	resize();
-    svg = d3.select("body")
-        .select("svg")
-        //.attr("width", width).attr("height", height)
-        .select(".objects");
 
-
+    //////////////////////////////////////////////////
+    // Set up Tree
+    //////////////////////////////////////////////////
+	
     var node, link, circle, foreignobj;
 
     var simulation = d3.forceSimulation(nodes)
+     	// Charge - How strongly nodes repels
         .force('charge', d3.forceManyBody()
             .strength(100)
             .distanceMax(0)
             .distanceMin(0)
         )
+     	// Link - The lines between nodes
         .force('link', d3.forceLink(links)
             .id(function (d) { return d.id; })
             .distance(0)
             .strength(0.1)
-            //.iterations(1)
+            .iterations(1)
         )
+     	// xAxis - x Coordinate of nodes (spread)
         .force("xAxis", d3.forceX(width / 2).strength(0))
-        .force("yAxis", d3.forceY(height / 2).strength(0))
         .force('x', d3.forceX()
             .x(function (d) { return (width / spread) * (spread + d.spread) - width; })
-            //.strength(1)
+            .strength(1)
         )
+     	// yAxis - y Coordinate of nodes (depth)
+        .force("yAxis", d3.forceY(height / 2).strength(0))
         .force('y', d3.forceY()
             .y(function (d) { return (height / depth) * (depth + d.depth) - height; })
-            //.strength(1)
+            .strength(1)
         )
+        // Collision - Set up the collision box for nodes
         .force('collision', rectCollide().size(function (d) { return [d.width + 20, d.height + 20] }))
         .alphaTarget(1)
+        // Tick - Set up the tick function
         .on('tick', ticked)
 
-    //add drag capabilities 
+    // Add drag capabilities 
     var drag_handler = d3.drag()
         .on("start", drag_start)
         .on("drag", drag_drag)
         .on("end", drag_end);
 
-    //add zoom capabilities 
+    // Add zoom capabilities 
     var zoom_handler = d3.zoom()
-        .on("zoom", zoom_actions);
+        .on("zoom", zoom_actions)
     zoom_handler(d3.select("svg"));
+	d3.select("svg").on("dblclick.zoom", null);
 
-	// Save function
-	
+	// Export to PNG function
 	d3.select('#saveButton').on('click', function(){
-		//saveSvgAsPng(document.getElementById("tree"), "diagram.png", {scale: 5});
 		saveSvgAsPng(document.getElementById("svg-family-tree"), "diagram.png", {scale: 5});
 	});
 
@@ -107,16 +113,17 @@ function initSvgTree(nodes, links, changeCb) {
     //////////////////////////////////////////////////
 
     // Handy functions
+
+	// Remove element from array
 	function removeArr(arr, elem) {
 		return arr.filter(function(e){
 			return e !== elem;
 		})
 	}
 	
-
-
     // Find xor of three variables
     function xor(a, b, c) { return (a ^ b ^ c) && !(a && b && c); }
+
     // Print node information on console
     function printNodes(d) {
         console.log("This node: ", d.id, d.label);
@@ -148,6 +155,7 @@ function initSvgTree(nodes, links, changeCb) {
 			console.log("    Description: ", e.desc);
         })
     }
+
     // Return selector of links of given node d.	
     function findlinks(d) {
         return link.filter(function (e) {
@@ -166,18 +174,6 @@ function initSvgTree(nodes, links, changeCb) {
         });
     }
 
-    // Check if array contains element.
-    // Could be deleted as basic JS Array must support this feature by default
-    function includes(array, elem) {
-        return (array.filter(value => value == elem).length > 0);
-    }
-
-    /* not used
-    // Return true if connected node is more than 2, or false
-    function checkConnectionHasChild(d)	{
-        return link.filter(e => (e.source.hasChild && e.source.id === d.id) || (e.target.hasChild && e.target.id === d.id)).size() > 2;
-    };
-    */
 
     // Magically calculates offset of four circles
     var halfW = (i, d) => Math.cos(i * Math.PI / 2) * (nodeoffset - d.width / 2) + d.width / 2,
@@ -186,6 +182,47 @@ function initSvgTree(nodes, links, changeCb) {
     ///-------------------------
 
     // Add node
+    // add Node to the graph
+    function addNode(d, depth, spread, connection = false) {
+		// Cannot add more than numNodes
+		if (numid > numNodes) return;
+
+		// Cannot create direct child of the origin???
+		//if (depth == 1 && spread == 0) return;
+		
+        // Name of the new node
+        let name = connection ? "connection" : "node"
+        // New node's info
+        var tmpnode = {
+            id: numid, label: name,
+            "height": nodeheight, "width": nodewidth,
+            "spread": spread, "depth": depth,
+			"child":[], "married":[], "sibling":[], "parent":[]
+        };
+        // For connection node, needs connection
+        if (connection)
+			tmpnode["connection"] = true;
+		else {
+			tmpnode["dob"] = "2000/01/01";
+			tmpnode["desc"] = "Added Node";
+		}
+
+        // New link's info
+        let tmplink = { id: numid, source: d, target: numid };
+
+        // Push node and links to the data
+		nodes.push(tmpnode); links.push(tmplink);
+		
+        // Increment counter
+        numid++;
+
+        // Recalculate coordinate
+        recalculate();
+
+        // Return added node
+        return tmpnode;
+    }
+
     function mousedownCircleTop(d, i) { addParent(d); }
     function mousedownCircleRight(d, i) { addMarriage(d); }
     function mousedownCircleBottom(d, i) { addChild(d); }
@@ -201,7 +238,7 @@ function initSvgTree(nodes, links, changeCb) {
 		// Set child information
 		child.married = [];
 		child.child = [];
-		child.sibling = d.child.slice();
+		child.sibling = directchild.slice();
 		child.parent = [d.id];
 
 		// Edit children's sibling
@@ -255,40 +292,6 @@ function initSvgTree(nodes, links, changeCb) {
         restart();
     }
 
-    // add Node to the graph
-    function addNode(d, depth, spread, connection = false) {
-        // Name of the new node
-        let name = connection ? "connection" : "node"
-        // New node's info
-        var tmpnode = {
-            id: numid, label: name,
-            "height": nodeheight, "width": nodewidth,
-            "spread": spread, "depth": depth,
-			"child":[], "married":[], "sibling":[], "parent":[]
-        };
-        // For connection node, needs connection
-        if (connection)
-			tmpnode["connection"] = true;
-		else {
-			tmpnode["dob"] = "2000/01/01";
-			tmpnode["desc"] = "Added Node";
-		}
-
-        // New link's info
-        let tmplink = { id: numid, source: d, target: numid };
-
-        // Push node and links to the data
-        nodes.push(tmpnode); links.push(tmplink);
-
-        // Increment counter
-        numid++;
-
-        // Recalculate coordinate
-        recalculate();
-
-        // Return added node
-        return tmpnode;
-    }
 
 
     function removeNode(d) {
@@ -296,7 +299,6 @@ function initSvgTree(nodes, links, changeCb) {
         // (1.) Link must be 1
         // (2-a.) one of isMarried, hasChild, or hasSibling must be true. 
         // (2-b.) none of isMarried, hasChild, or hasSibling is true. (child of couple)
-		// (3.) Me (the origin) cannot be deleted
 
         // Find the link
         let connectedlink = findlinks(d);
@@ -333,6 +335,8 @@ function initSvgTree(nodes, links, changeCb) {
             // The node cannot be deleted
             console.log("The node cannot be deleted!");
         }
+
+		numid--;
 		console.log("removed.");
         recalculate();
         restart();
@@ -390,7 +394,6 @@ function initSvgTree(nodes, links, changeCb) {
 			thismarried.forEach(function(f){
 				newmarried = removeArr(newmarried, f);
 			})
-			//e.married = newmarried.filter(x => !thismarried.includes(x));
 			console.log("    married: ", e.married);
 			e.married = newmarried;
 		})
@@ -468,25 +471,26 @@ function initSvgTree(nodes, links, changeCb) {
 		var editVariableList = {
 		}
 
-		console.log("will edit this content");
-		console.log(d);
-		console.log(this);
-
 		let id = this.id;
 		let parent = this.parentNode;
 		let thisNode = d3.select(this);
 		let parentNode = d3.select(parent);
 
+		//console.log("d: ",d);
 		let thissize = thisNode.node().getBoundingClientRect()
 		let thiswidth  = thissize.width;
 		let thisheight  = thissize.height;
+		console.log(this);
+		console.log("width: ", thiswidth);
+		console.log("height: ", thisheight);
 
 		let input = d3.select(parent)
       		// Add form
 			.insert("xhtml:form", "#" + id + " + *")
 			.append("input")
 			.attr("id", id + "-form")
-			.attr("style", "width: " + thiswidth/2 + "px;")
+			.attr("style", "width: " + thiswidth + "px;")
+			.attr("style", "height: " + thisheight + "px;")
 		    // Initiate form
 			.attr("value", function(){
 				thisNode.style("display", "none");
@@ -495,6 +499,8 @@ function initSvgTree(nodes, links, changeCb) {
 		    // Form out of focus
 			.on("blur", function() {
 				updateD(updateThis());
+				console.log(d);
+				parentNode.select("#" + id +"-form").remove();
             })
 		    // Form edited
             .on("keypress", function() {
@@ -508,6 +514,8 @@ function initSvgTree(nodes, links, changeCb) {
                     if (event.stopPropagation) event.stopPropagation();
                     event.preventDefault();
 					updateD(updateThis());
+					console.log(d);
+					parentNode.select("#" + id +"-form").remove();
                 }
             })
 		
@@ -516,7 +524,6 @@ function initSvgTree(nodes, links, changeCb) {
 			if (txt.match(/^[0-9a-zA-Z !?-_\./,]+$/g))
 				thisNode.text(function(d) { return txt; });
 			thisNode.style("display", "block")
-            parentNode.select("#" + id +"-form").remove();
 			return txt;
         }
 		function updateD(newinput){
@@ -536,25 +543,19 @@ function initSvgTree(nodes, links, changeCb) {
     function mouseoverNode(d, i) {
         simulation.alpha(0.1);
 
-        let connectedlink = link.filter(function (e) {
-            return (e.source.id === d.id) || (e.target.id === d.id);
-        });
-
-
         // Expand foreignObject
         let fo = d3.select(this).select("foreignObject")
             .transition().duration(250)
             // width
             .attrTween("width", function (d) {
-                let i = d3.interpolate(d.width, nodewidth * 1);
+                let i = d3.interpolate(d.width, nodewidthexp);
                 return function (t) {
-                    d.width = i(t);
-                    return i(t);
+                    d.width = i(t); return i(t);
                 }
             })
             // height
             .attrTween("height", function (d) {
-                let i = d3.interpolate(d.height, nodeheight * 2);
+                let i = d3.interpolate(d.height, nodeheightexp);
                 return function (t) {
                     d.height = i(t);
                     // Recalculate collision box
@@ -562,15 +563,18 @@ function initSvgTree(nodes, links, changeCb) {
                         .size(function (d) { return [d.width + 10, d.height + 10] }));
                     return i(t);
                 }
-            })
-        // Expand HTML wrapper (div)
-        let div = fo.select("div")
-            .style("width", divwidth * 1 + "px")
-            .style("height", divheight * 2 + "px")
+            });
+		let div = fo.select("div");
 
-        let desc = div.select("div")
+
+		let divinside = div.select("#node-div-inside")
+			//.style("float", "left");
+		let img = div.select("#node-div-img")
+			//.style("float", "left")
+        let desc = divinside.select("#node-desc")
             .style("display", "block")
             .style("opacity", 1);
+		
 
 
 		let thismarried = d.married||[];
@@ -592,13 +596,14 @@ function initSvgTree(nodes, links, changeCb) {
 
 
         // Show delete circle
-        if (thismarried.length + thischild.length + thissibling.length + thisparent.length <= 2
+		let linknum = thismarried.length + thischild.length + thissibling.length + thisparent.length;
+        if (linknum <= 2 && linknum > 0
 			&& thismarried.length <= 2
 			&& !haschild ) {
             d3.select(this).select(".deletecircle")
                 .style("display", "block")
                 .transition().duration(250)
-                .attr("r", 15)
+                .attr("r", 20)
                 .style("opacity", 1);
         }
 
@@ -606,7 +611,7 @@ function initSvgTree(nodes, links, changeCb) {
         let circles = d3.select(this).select(".addnode-circle").selectAll("circle")
             .style("display", "block")
             .transition().duration(250)
-            .attr("r", 15)
+            .attr("r", 20)
             .style("opacity", 1);
     }
     // Mouse out action
@@ -636,11 +641,13 @@ function initSvgTree(nodes, links, changeCb) {
                 };
             });
         // Shring HTML wrapper (div)
-        let div = fo.select("div")
-            .style("width", divwidth + "px")
-            .style("height", divheight - divoffset + "px")
+        let div = fo.select("div");
 
-        let desc = div.select("div")
+		let img = div.select("#node-div-img")
+			//.style("float", null)
+		let divinside = div.select("#node-div-inside")
+			//.style("float", null);
+        let desc = divinside.select("#node-desc")
             .style("display", "none")
             .style("opacity", 0);
 
@@ -679,27 +686,40 @@ function initSvgTree(nodes, links, changeCb) {
     }
 
     // Zoom functions 
-    function zoom_actions() { d3.select(".objects").attr("transform", d3.event.transform) }
+    function zoom_actions() {
+		d3.select(".objects")
+			.attr("transform", d3.event.transform) }
 
     // Recalculate coordinate
     function recalculate() {
-		if (links.length < 3) return;
-        let spread_min = Math.min.apply(Math, nodes.map(function (o) { return o.spread })),
-            spread_max = Math.max.apply(Math, nodes.map(function (o) { return o.spread })),
-            depth_min = Math.min.apply(Math, nodes.map(function (o) { return o.depth })),
-            depth_max = Math.max.apply(Math, nodes.map(function (o) { return o.depth }));
-        let spread = Math.abs(spread_max - spread_min),
-            depth = Math.abs(depth_max - depth_min);
+		let spread_min = 0,spread_max = 0,
+			depth_min = 0,depth_max = 0;
+		let spread, depth
+		let abs = (a,b) => Math.abs(a - b);
 
-        simulation
-            .force('x', d3.forceX()
-                .x(function (d) { return (width / spread) * (spread + d.spread) - width ; })
-                .strength(1)
-            )
-            .force('y', d3.forceY()
-                .y(function (d) { return (height / depth) * (depth + d.depth) - height ; })
-                .strength(0.5)
-            )
+		if (links.length > 3) {
+			spread_min = Math.min.apply(Math, nodes.map(function (o) { return o.spread }));
+            spread_max = Math.max.apply(Math, nodes.map(function (o) { return o.spread }));
+            depth_min = Math.min.apply(Math, nodes.map(function (o) { return o.depth }));
+            depth_max = Math.max.apply(Math, nodes.map(function (o) { return o.depth }));
+
+			spread = abs(spread_max,spread_min);
+			depth = abs(depth_max,depth_min);
+
+			simulation
+				.force('x', d3.forceX()
+					   .x(function (d) { return (width / spread) * (spread + d.spread) - width ; })
+					   .strength(0.75)
+					  )
+				.force('y', d3.forceY()
+					   .y(function (d) { return (height / depth) * (depth + d.depth) - height ; })
+					   .strength(0.5)
+					  )
+		} else {
+			spread = abs(spread_max,spread_min);
+			depth = abs(depth_max,depth_min);
+		}
+
         return [spread, depth];
     }
 
@@ -751,54 +771,69 @@ function initSvgTree(nodes, links, changeCb) {
                 }
 
                 // Add object to a regular node
-                group
+                let fo = group
                     // ForeignObject (the HTML on top of svg)
                     .append("foreignObject")
-					.on("mousedown", function (d) { printNodes(d);})
+					//.on("mousedown", function (d) { printNodes(d);})
                     .call(drag_handler)
-                    .attr("id", function (d) { return "node-" + d.id; })
                     .attr("width", nodewidth + "px")
                     .attr("height", nodeheight + divoffset + "px")
-                    .attr("class", "node")
+                    .attr("class", "node");
                     // HTML content wrapper (will expand on mouse hover)
+				fo
                     .append("xhtml:div")
 					.attr("xmlns", "http://www.w3.org/1999/xhtml")
-                    .style("width", divwidth + "px")
-                    .style("height", divheight - divoffset + "px")
                     .attr("class", "node-div")
-
+                    //.style("width", divwidth + "px")
+                    //.style("height", divheight - divoffset + "px")
+				
                     .each(function (d) {
-                        let div = d3.select(this);
-                        div
-                            // img
-                            .append("xhtml:img")
+                        let thisdiv = d3.select(this);
+                        let div = thisdiv
+							.append("div")
+							.attr("id", "node-div-img")
+							.classed("node-div-img", true)
 							.attr("xmlns", "http://www.w3.org/1999/xhtml")
-                            .attr("class", "profilepic")
+							.style("text-align", "-webkit-center");
+						div
+						    // image
+                            .append("xhtml:img")
+                            .attr("id", "node-profilepic")
+                            .classed("node-profilepic", true)
+							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             //.attr("src", "./views/pages/image/profile.png")
                             .attr("src", "data:image/png;base64,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")
                             .attr("alt", "profile pic")
+
+						div = thisdiv
+							.append("div")
+							.attr("id", "node-div-inside")
+							.classed("node-div-inside", true)
+							.attr("xmlns", "http://www.w3.org/1999/xhtml");
                         div
-                            // h3 (name)
-                            .append("xhtml:h3")
+                            // h1 (name)
+                            .append("xhtml:h1")
 							.attr("id", "node-name")
+							.classed("node-name", true)
 							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .text(function (d) { return d.label; })
-							.on("dblclick", editNodeContent)
+							.on("dblclick", editNodeContent);
                         div
                             // h2 (dob)
-                            .append("xhtml:h4")
+                            .append("xhtml:h2")
 							.attr("id", "node-dob")
+							.classed("node-dob", true)
 							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .text(function (d) { return d.dob; })
-							.on("dblclick", editNodeContent)
-                        div
-                            .append("xhtml:div")
+							.on("dblclick", editNodeContent);
+						div
+                            .append("xhtml:h3")
 							.attr("id", "node-desc")
+                            .attr("class", "node-desc")
 							.attr("xmlns", "http://www.w3.org/1999/xhtml")
-                            .attr("class", "description")
                             .text(function (d) { return d.desc; })
 							.on("dblclick", editNodeContent)
-                            .attr("display", "none").style("opacity", 0)
+                            .attr("display", "none").style("opacity", 0);
                     })
 
 
