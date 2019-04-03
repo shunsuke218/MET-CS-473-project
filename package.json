@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/shunsuke218/MET-CS-473-project#readme",
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "body-parser": "^1.18.3",
     "connect-history-api-fallback": "^1.6.0",
     "dotenv": "^6.2.0",

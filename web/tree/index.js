@@ -52,6 +52,9 @@ async function getTreeFromApi() {
 
     initSvgTree(nodes, links, async (newNodes, newLinks) => {
 
+        console.log(newNodes);
+        console.log(newLinks);
+
         // convert new links to the following format:
         //{ source: 0, target: 2 },
         let normalizedLinks = newLinks.map((link) => {

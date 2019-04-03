@@ -38,6 +38,22 @@ Go to localhost:5005 in your browser. You should be able to see the website in a
 
 The staging server is located at https://cs473testing.stevemu.com
 
+## Branching
+
+dev is the main development branch. Code in this branch are deployed to the staging server.
+
+master is the production branch. Code in this branch are deployed to production (don't exist yet)
+
+## Development workflow
+
+Create your own branch when working on a feature. When you done, create a pull request to be merged into dev branch.
+
+Steve will handle the merge.
+
+After the code is merged into dev, you can click "Finish" in Pivotal tracker. Then, after the code is deployed to staging server, you can click "Deliver".
+
+Our tester Majda will test the feature after it is "delivered". If there are errors, she will "reject". Or "accept" if there are no errors.
+
 ## Style guide
 
 * Use web folder, which contains the updated architecture
@@ -49,6 +65,7 @@ The staging server is located at https://cs473testing.stevemu.com
 ## Built With
 
 * [D3.js](https://d3.js.org/) - JavaScript library to visualize node/link data
+* [Auth0](auth0.com) - 3rd party authentication service
 
 ## Versioning
 
@@ -60,7 +77,7 @@ For the versions available, see the [tags on this repository](https://github.com
 ## Authors
 
 * **Shunsuke Haga** - *Front End* - [Repo](https://github.com/shunsuke218)
-* **Steve Mu**  - *Back End* 
+* **[Steve Mu](https://github.com/stevemu)**  - *Architector* 
 
 ## License
 

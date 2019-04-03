@@ -879,11 +879,19 @@ function initSvgTree(nodes, links, changeCb) {
         simulation.force("link").links(links);
         recalculate();
         simulation.alpha(1).restart();
+
+        changeCb(nodes, links)
     }
 
 
     // Tick function -- executed whenever there is an action
     function ticked() {
+
+        //check when the link is empty.
+        // if (links.length == 0) {
+        //     return
+        // }
+
         // foreignObject
         node.select("foreignObject")
             .attr("x", function (d) { return d.x; })

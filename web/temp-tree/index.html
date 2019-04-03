@@ -8,23 +8,15 @@
 
     <!-- styles -->
     <link rel="stylesheet" type="text/css" href="../styles.css">
-    <link rel="stylesheet" type="text/css" href="./tree.css">
+    <link rel="stylesheet" type="text/css" href="./index.css">
     <script src="https://cdn.auth0.com/js/auth0/9.10/auth0.min.js"></script>
 
 </head>
 
 <body>
-    <!-- <a href="#" id="btn-login">Login</a> -->
     <div id="header_container">
         <nav>
-    
             <div>
-                <ul class="side-nav-links">
-                    <li><a href="#">Home</a></li>
-                    <li> <a href="#">View Family Tree</a></li>
-                    <li> <a href="#">Search</a></li>
-                </ul>
-
                 <div class="burger">
                     <div class=line1></div>
                     <div class=line2></div>
@@ -32,22 +24,24 @@
                 </div>
                 <img src="../images/logo.png" alt="logo" id="logo-image">
                 <div class="logo">THE FAMILY TREE MAP</div>
-
             </div>
-    
-            <div>
+            <ul class="side-nav-links">
+                <li><a href="/">Home</a></li>
+                <li> <a href="#">Export Tree</a></li>
+                <li> <a href="/contact">Contact us</a></li>
+            </ul>
+            <div id="nav-buttons">
                 <div id="login"><a href="#" id="btn-login" class="btn">Login</a></div>
                 <div id="logout"><a href="#" id="btn-logout" class="btn">Log out</a></div>
-                <div id="creatAccount"><a href="#" id="creat-account" class="btn">Creat an account</a></div>
             </div>
-    
         </nav>
     </div>
 
     <div id="page_container">
+        <button id='saveButton'>Export my D3 visualization to PNG</button>
+
         <div id="family-tree">
             <h1>Demo Family Tree here</h1>
-            <button id='saveButton'>Export my D3 visualization to PNG</button>
             <div id="wrapper"></div>
         </div>
     </div>
@@ -66,10 +60,10 @@
 
     <!-- js files only for this page -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
-	<script src="../js/libs/saveSvgAsPng.js"></script>
-	<script src="../js/libs/rectCollide.js"></script>
+    <script src="../js/libs/saveSvgAsPng.js"></script>
+    <script src="../js/libs/rectCollide.js"></script>
     <script src="../js/utils/tree.js"></script>
-    <script src="./tree.js"></script>
+    <script src="./index.js"></script>
 
 
 </body>
