@@ -42,6 +42,7 @@
 	width: auto;
 	height: 100%;
 	object-fit:contain;
+	padding: 10px;
 }
 
 /* Another Div */
