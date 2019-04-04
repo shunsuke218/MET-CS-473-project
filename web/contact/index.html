@@ -11,6 +11,7 @@
 
   <style>
     input[type=text],
+    input[type=email],
     select,
     textarea {
       width: 100%;
@@ -72,10 +73,10 @@
     <form id="contact-form" action="/api/contact" method="POST">
 
       <label for="name">Name</label>
-      <input type="text" id="name" name="name">
+      <input type="text" id="name" name="name" required>
 
       <label for="email">Email</label>
-      <input type="text" id="email" name="email">
+      <input type="email" id="email" name="email" required>
 
       <label for="country">Country</label>
       <select id="country" name="country">
@@ -326,8 +327,8 @@
         <option value="Zimbabwe">Zimbabwe</option>
       </select>
 
-      <label for="subject">Subject</label>
-      <textarea id="subject" name="subject" placeholder="What is your issue?" style="height:200px"></textarea>
+      <label for="description">Description</label>
+      <textarea id="description" name="description" placeholder="What is your issue?" style="height:200px" required></textarea>
 
       <!-- <button onclick="myFunction()">Submit</button> -->
       <input type="submit" value="Submit">
@@ -341,15 +342,7 @@
   </div>
 
   <script>
-    function submitButton() {
-      alert("Thank you for contacting us! We will be with you shortly.");
-    }
 
-    // function onSubmit(e) {
-    //   e.preventDefault()
-    //   console.log('submitted');
-    //   return false
-    // }
     document.getElementById("contact-form").onsubmit = (e) => {
 
       // validation
@@ -360,8 +353,8 @@
       } else if (document.getElementById("email").value == "") {
         alert("please enter email")
         isValidated = false
-      } else if (document.getElementById("subject").value == "") {
-        alert("please enter subject")
+      } else if (document.getElementById("description").value == "") {
+        alert("please enter description")
         isValidated = false
       }
 
@@ -371,8 +364,6 @@
       }
 
       alert("Thank you for submitting the issue!")
-
-
     }
   </script>
 

@@ -5,16 +5,16 @@ const sgMail = require('@sendgrid/mail');
 router.post('/', async (req, res, next) => {
     try {
 
-        let {name, email, subject, country} = req.body;
-        // console.log(req.body);
+        let {name, email, description, country} = req.body;
+        console.log(req.body);
 
-        let emailBody = `${name}: ${subject} from ${country}`
+        let emailBody = `${name}: ${description} from ${country}`
 
         sgMail.setApiKey(process.env.SENDGRID_API_KEY);
         const msg = {
-            to: 'steve.mu.dev@gmail.com',
+            to: 'skycloud112@gmail.com',
             from: email,
-            subject: 'Customer email from Cs473 project',
+            subject: 'Cs473 project contact form',
             text: emailBody,
             html: emailBody,
         };
