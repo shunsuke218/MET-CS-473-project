@@ -1,3 +1,27 @@
+
+#button {
+  position: fixed;
+  bottom: 10%;
+  width:75px;
+  height:75px;
+  border-radius: 50%;
+  border: 2px solid #f5f5f5;
+  text-align:center;
+  text-decoration:none;
+  background: #8E9E71;
+  padding: 10px 10px 0px 10px;
+}
+
+#button:hover{
+	background: #EE9E71;
+}
+
+#button > img {
+    width: 75%;
+    height: 75%;
+    margin: auto;	
+}
+
 #tree line {
     stroke: #aaa;
 }
@@ -29,7 +53,6 @@
 }
 
 #tree .node-profilepic {
-    /* please add px */
  	display: block;
 	border-radius: 25px;
     background-color: white;
@@ -76,12 +99,12 @@
 	font-weight: 400;
 	font-size: x-large;
 }
-
-h1 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
-h3 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; }
-p { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; }
-blockquote { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
-pre { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
-body { 
+ 
+#tree h1 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
+#tree h3 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; }
+#tree p { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; }
+#tree blockquote { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
+#tree pre { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
+#tree body { 
 	font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
 }
