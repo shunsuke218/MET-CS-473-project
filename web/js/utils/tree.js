@@ -19,6 +19,21 @@ function initSvgTree(nodes, links, changeCb) {
 	var wrapperDiv = document.getElementById("wrapper");
 
 
+	// Add export button
+	d3.select("#page_container")
+	    // div element
+		.insert("div", "#family-tree")
+		.attr("id", "button")
+		.attr("class", "exportbutton")
+		.on("mousedown", function(){
+			saveSvgAsPng(document.getElementById("svg-family-tree"), "diagram.png", {scale: 5});
+		})
+        // img element
+	    .append("img")
+        .attr("src", "../../images/download.svg")
+        .attr("alt", "profile pic")
+	;
+
 	// Initialize canvas
     var svg = d3.select(wrapperDiv)
 		.classed("svg-container", true)
@@ -489,7 +504,7 @@ function initSvgTree(nodes, links, changeCb) {
 			.on("blur", function() {
 				updateD(updateThis());
 				console.log(d);
-				parentNode.select("#" + id +"-form").remove();
+				parentNode.select("form").remove();
             })
 		    // Form edited
             .on("keypress", function() {
@@ -504,20 +519,26 @@ function initSvgTree(nodes, links, changeCb) {
                     event.preventDefault();
 					updateD(updateThis());
 					console.log(d);
-					parentNode.select("#" + id +"-form").remove();
+					parentNode.select("form").remove();
                 }
             })
 		restart();
 		
 		function updateThis() {
 			let txt = input.node().value;
-			if (txt.match(/^[0-9a-zA-Z !?-_\./,]+$/g))
+			if (txt.match(/^[-0-9a-zA-Z() !?_\./,]+$/g)) 
 				thisNode.text(function(d) { return txt; });
+			else
+				txt = null;
+
 			thisNode.style("display", "block")
 			return txt;
         }
 		function updateD(newinput){
-			if (id === "node-name") {
+			console.log(newinput);
+			if (newinput == null) {
+				return;
+			} else if (id === "node-name") {
 				d.label = newinput;
 			} else if (id === "node-dob") {
 				d.dob = newinput;
@@ -771,9 +792,7 @@ function initSvgTree(nodes, links, changeCb) {
             
         nodeEnter
             .each(function (d) {
-                // console.log(this);
                 let group = d3.select(this);
-                // console.log(group);
                 // add add-node circle only for connection-node
                 if (group.classed("node-connection")) {
                     group
@@ -789,7 +808,7 @@ function initSvgTree(nodes, links, changeCb) {
                 let fo = group
                     // ForeignObject (the HTML on top of svg)
                     .append("foreignObject")
-					//.on("mousedown", function (d) { printNodes(d);})
+					.on("mousedown", function (d) { printNodes(d);})
                     .call(drag_handler)
                     .attr("width", nodewidth + "px")
                     .attr("height", nodeheight + divoffset + "px")
