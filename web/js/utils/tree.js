@@ -905,7 +905,7 @@ function initSvgTree(nodes, links, changeCb) {
         recalculate();
         simulation.alpha(1).restart();
 
-		changeCb();
+		changeCb(nodes, links);
     }
 
 
