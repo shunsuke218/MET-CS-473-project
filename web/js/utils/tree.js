@@ -522,7 +522,6 @@ function initSvgTree(nodes, links, changeCb) {
 					parentNode.select("form").remove();
                 }
             })
-		restart();
 		
 		function updateThis() {
 			let txt = input.node().value;
@@ -545,6 +544,7 @@ function initSvgTree(nodes, links, changeCb) {
 			} else if (id === "node-desc") {
 				d.desc = newinput;
 			}
+			restart();
 		}
 	}
 
@@ -568,6 +568,7 @@ function initSvgTree(nodes, links, changeCb) {
 			}).then((result) => {
 				d3.select(thisinfo).attr("src", result);
 				input.remove();
+				d.image = result;
 				restart();
 			})
 		}
@@ -830,7 +831,9 @@ function initSvgTree(nodes, links, changeCb) {
                             .append("xhtml:img")
                             .attr("id", "node-profilepic")
                             .classed("node-profilepic", true)
-                            .attr("src", "../../images/profile.png")
+                            .attr("src", function (d) {
+								return (d.image) ? d.image : "../../images/profile.png";
+							})
                             .attr("alt", "profile pic")
 							.on("dblclick", editNodeAddPicture)
 
@@ -905,7 +908,8 @@ function initSvgTree(nodes, links, changeCb) {
         recalculate();
         simulation.alpha(1).restart();
 
-		changeCb();
+		changeCb(nodes, links);
+		console.log("change pushed to cb");
     }
 
 
