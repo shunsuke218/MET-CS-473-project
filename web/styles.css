@@ -26,8 +26,8 @@ body {
 }
 
 #footer_container {
-	position: fixed;
-	bottom: 0;
+	/* position: fixed; */
+	/* bottom: 0; */
 	width: 100%;
 }
 
@@ -157,11 +157,11 @@ nav>div {
 }
 
 #footer {
-	height: 60px;
+	height: 90px;
 	margin-top: -60px;
 	clear: both;
 	background-color: whitesmoke;
-	color: #7cb342;
+	color: #7cb34263;
 	text-align: center;
 	padding: 20px;
 }
