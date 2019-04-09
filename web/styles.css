@@ -9,9 +9,26 @@ html, body {
 	height: 100%;
 }
 
+
+h1 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
+h3 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; }
+p { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; }
+blockquote { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
+pre { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
+body { 
+	font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+
+
 #page_container {
-	min-height: 100%;
+	height: 100%;
 	padding: 10px;
+}
+
+#footer_container {
+	/* position: fixed; */
+	/* bottom: 0; */
+	width: 100%;
 }
 
 #home {
@@ -140,11 +157,11 @@ nav>div {
 }
 
 #footer {
-	height: 60px;
+	height: 90px;
 	margin-top: -60px;
 	clear: both;
 	background-color: whitesmoke;
-	color: #7cb342;
+	color: #7cb34263;
 	text-align: center;
 	padding: 20px;
 }
@@ -257,4 +274,11 @@ nav>div {
 
 .toggle .line3 {
 	transform: rotate(45deg) translate(-5px, -6px);
+}
+#share{
+    width:42px;
+    height:42px;
+    border:0"
+    
+
 }

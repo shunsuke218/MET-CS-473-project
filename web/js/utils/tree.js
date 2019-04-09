@@ -2,10 +2,6 @@ function initSvgTree(nodes, links, changeCb) {
     var width, height;
     const nodewidth = 300, nodeheight = 300, nodeoffset = 20;
     const nodewidthexp = 400, nodeheightexp = 500, divoffset = 54;
-    //const divwidth = 200, divheight = 150, divoffset = 54;
-	//const divwidth = 200, divheight = 200, divoffset = 54;
-	//const divwidthexp = 400, divheightexp = 300;
-    // Don't forget to edit .node class of css!!
 
 
     nodes.forEach(function (tmpnode) {
@@ -22,6 +18,21 @@ function initSvgTree(nodes, links, changeCb) {
     //////////////////////////////////////////////////
 	var wrapperDiv = document.getElementById("wrapper");
 
+
+	// Add export button
+	d3.select("#page_container")
+	    // div element
+		.insert("div", "#family-tree")
+		.attr("id", "button")
+		.attr("class", "exportbutton")
+		.on("mousedown", function(){
+			saveSvgAsPng(document.getElementById("svg-family-tree"), "diagram.png", {scale: 5});
+		})
+        // img element
+	    .append("img")
+        .attr("src", "../../images/download.svg")
+        .attr("alt", "profile pic")
+	;
 
 	// Initialize canvas
     var svg = d3.select(wrapperDiv)
@@ -187,9 +198,6 @@ function initSvgTree(nodes, links, changeCb) {
 		// Cannot add more than numNodes
 		if (numid > numNodes) return;
 
-		// Cannot create direct child of the origin???
-		//if (depth == 1 && spread == 0) return;
-		
         // Name of the new node
         let name = connection ? "connection" : "node"
         // New node's info
@@ -468,15 +476,11 @@ function initSvgTree(nodes, links, changeCb) {
 	// Edit the node
 
 	function editNodeContent(d){
-		var editVariableList = {
-		}
-
 		let id = this.id;
 		let parent = this.parentNode;
 		let thisNode = d3.select(this);
 		let parentNode = d3.select(parent);
 
-		//console.log("d: ",d);
 		let thissize = thisNode.node().getBoundingClientRect()
 		let thiswidth  = thissize.width;
 		let thisheight  = thissize.height;
@@ -500,7 +504,7 @@ function initSvgTree(nodes, links, changeCb) {
 			.on("blur", function() {
 				updateD(updateThis());
 				console.log(d);
-				parentNode.select("#" + id +"-form").remove();
+				parentNode.select("form").remove();
             })
 		    // Form edited
             .on("keypress", function() {
@@ -515,28 +519,61 @@ function initSvgTree(nodes, links, changeCb) {
                     event.preventDefault();
 					updateD(updateThis());
 					console.log(d);
-					parentNode.select("#" + id +"-form").remove();
+					parentNode.select("form").remove();
                 }
             })
 		
 		function updateThis() {
 			let txt = input.node().value;
-			if (txt.match(/^[0-9a-zA-Z !?-_\./,]+$/g))
+			if (txt.match(/^[-0-9a-zA-Z() !?_\./,]+$/g)) 
 				thisNode.text(function(d) { return txt; });
+			else
+				txt = null;
+
 			thisNode.style("display", "block")
 			return txt;
         }
 		function updateD(newinput){
-			if (id === "node-name") {
+			console.log(newinput);
+			if (newinput == null) {
+				return;
+			} else if (id === "node-name") {
 				d.label = newinput;
 			} else if (id === "node-dob") {
 				d.dob = newinput;
 			} else if (id === "node-desc") {
 				d.desc = newinput;
 			}
+			restart();
 		}
 	}
 
+	// Add picture to the node
+	function editNodeAddPicture(d){
+		var thisinfo = this;
+		var input = document.createElement('input');
+		input.type = "file"; input.id = "test-input";
+		input.onchange = function(){
+			const file = input.files[0];
+			if(!file.type.match(/^image\/(png|jpg|jpeg|gif)$/)) return;
+
+			new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onload = (event) => {
+					
+					resolve(event.target.result);
+				}
+				reader.readAsDataURL(file);
+				
+			}).then((result) => {
+				d3.select(thisinfo).attr("src", result);
+				input.remove();
+				d.image = result;
+				restart();
+			})
+		}
+		input.click();
+	}
 	
     ///-------------------------
     // Mouse over action
@@ -756,9 +793,7 @@ function initSvgTree(nodes, links, changeCb) {
             
         nodeEnter
             .each(function (d) {
-                // console.log(this);
                 let group = d3.select(this);
-                // console.log(group);
                 // add add-node circle only for connection-node
                 if (group.classed("node-connection")) {
                     group
@@ -774,7 +809,7 @@ function initSvgTree(nodes, links, changeCb) {
                 let fo = group
                     // ForeignObject (the HTML on top of svg)
                     .append("foreignObject")
-					//.on("mousedown", function (d) { printNodes(d);})
+					.on("mousedown", function (d) { printNodes(d);})
                     .call(drag_handler)
                     .attr("width", nodewidth + "px")
                     .attr("height", nodeheight + divoffset + "px")
@@ -782,10 +817,7 @@ function initSvgTree(nodes, links, changeCb) {
                     // HTML content wrapper (will expand on mouse hover)
 				fo
                     .append("xhtml:div")
-					.attr("xmlns", "http://www.w3.org/1999/xhtml")
                     .attr("class", "node-div")
-                    //.style("width", divwidth + "px")
-                    //.style("height", divheight - divoffset + "px")
 				
                     .each(function (d) {
                         let thisdiv = d3.select(this);
@@ -793,29 +825,27 @@ function initSvgTree(nodes, links, changeCb) {
 							.append("div")
 							.attr("id", "node-div-img")
 							.classed("node-div-img", true)
-							.attr("xmlns", "http://www.w3.org/1999/xhtml")
 							.style("text-align", "-webkit-center");
 						div
 						    // image
                             .append("xhtml:img")
                             .attr("id", "node-profilepic")
                             .classed("node-profilepic", true)
-							.attr("xmlns", "http://www.w3.org/1999/xhtml")
-                            //.attr("src", "./views/pages/image/profile.png")
-                            .attr("src", "data:image/png;base64,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")
+                            .attr("src", function (d) {
+								return (d.image) ? d.image : "../../images/profile.png";
+							})
                             .attr("alt", "profile pic")
+							.on("dblclick", editNodeAddPicture)
 
 						div = thisdiv
 							.append("div")
 							.attr("id", "node-div-inside")
 							.classed("node-div-inside", true)
-							.attr("xmlns", "http://www.w3.org/1999/xhtml");
                         div
                             // h1 (name)
                             .append("xhtml:h1")
 							.attr("id", "node-name")
 							.classed("node-name", true)
-							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .text(function (d) { return d.label; })
 							.on("dblclick", editNodeContent);
                         div
@@ -823,14 +853,12 @@ function initSvgTree(nodes, links, changeCb) {
                             .append("xhtml:h2")
 							.attr("id", "node-dob")
 							.classed("node-dob", true)
-							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .text(function (d) { return d.dob; })
 							.on("dblclick", editNodeContent);
 						div
                             .append("xhtml:h3")
 							.attr("id", "node-desc")
                             .attr("class", "node-desc")
-							.attr("xmlns", "http://www.w3.org/1999/xhtml")
                             .text(function (d) { return d.desc; })
 							.on("dblclick", editNodeContent)
                             .attr("display", "none").style("opacity", 0);
@@ -880,18 +908,13 @@ function initSvgTree(nodes, links, changeCb) {
         recalculate();
         simulation.alpha(1).restart();
 
-        changeCb(nodes, links)
+		changeCb(nodes, links);
+		console.log("change pushed to cb");
     }
 
 
     // Tick function -- executed whenever there is an action
     function ticked() {
-
-        //check when the link is empty.
-        // if (links.length == 0) {
-        //     return
-        // }
-
         // foreignObject
         node.select("foreignObject")
             .attr("x", function (d) { return d.x; })
@@ -920,7 +943,7 @@ function initSvgTree(nodes, links, changeCb) {
             ;
     }
 
-    restart(); // I moved restart here
+    restart();
 }
 
 // export { initSvgTree };

@@ -118,48 +118,36 @@
 	};
 
 
-
-	
 	const inlineImages = el => Promise.all(
-		Array.from(el.querySelectorAll('image,img,foreignObject > *')).map(image => {
-			if (image.tagName === 'IMG') {
-				fileToBase64(image.src, function(dataUri){
-					image.setAttribute('src', dataUri);
-				});
-				console.log(image);
-				console.log(image.tagName);
-
-			} else if (image.tagName === 'IMAGE') {
-				let href = image.getAttributeNS('http://www.w3.org/1999/xlink', 'href') || image.getAttribute('href');
-				if (!href) return Promise.resolve(null);
-				if (isExternal(href)) {
-					href += (href.indexOf('?') === -1 ? '?' : '&') + 't=' + new Date().valueOf();
-				}
-				return new Promise((resolve, reject) => {
-					const canvas = document.createElement('canvas');
-					const img = new Image();
-					img.crossOrigin = 'anonymous';
-					img.src = href;
-					img.onerror = () => reject(new Error(`Could not load ${href}`));
-					img.onload = () => {
-						canvas.width = img.width;
-						canvas.height = img.height;
-						canvas.getContext('2d').drawImage(img, 0, 0);
-						image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', canvas.toDataURL('image/png'));
-						resolve(true);
-					};
-				});
-			} else {
-				if (image.tagName === 'SVG')
-					image.setAttributeNS(xhtmlNs, 'xmlns', svgNs);
-				else if (!image.getAttribute('xmlns')) {
-					image.setAttributeNS(xhtmlNs, 'xmlns', xhtmlNs2);
-				} 
+		Array.from(el.querySelectorAll('img')).map(image => {
+			//let href = image.getAttributeNS('http://www.w3.org/1999/xlink', 'href') || image.getAttribute('href');
+			let href = image.getAttributeNS('http://www.w3.org/1999/xlink', 'src') || image.getAttribute('src');
+			if (!href) return Promise.resolve(null);
+			if (isExternal(href)) {
+				href += (href.indexOf('?') === -1 ? '?' : '&') + 't=' + new Date().valueOf();
 			}
+
+			return new Promise((resolve, reject) => {
+				const canvas = document.createElement('canvas');
+				const img = new Image();
+				img.crossOrigin = 'anonymous';
+				img.src = href;
+				img.onerror = () => reject(new Error(`Could not load ${href}`));
+				img.onload = () => {
+					canvas.width = img.width;
+					canvas.height = img.height;
+					canvas.getContext('2d').drawImage(img, 0, 0);
+					image.setAttributeNS('http://www.w3.org/1999/xlink', 'src', canvas.toDataURL('image/png'));
+					image.src = canvas.toDataURL('image/png');
+					image.xmlns = "http://www.w3.org/1999/xhtml";
+					resolve(true);
+				};
+			});
 		})
 	);
 
 	function fileToBase64(url, callback) {
+		//console.log("converting " + url + " to image.");
 		var image = new Image();
 		image.onload = function () {
 			var canvas = document.createElement('canvas');
@@ -259,8 +247,11 @@
 			responsive = false,
 		} = options || {};
 		
-
 		return inlineImages(el).then(() => {
+			Array.from(el.querySelectorAll('foreignObject > *')).forEach(fo => {
+				fo.xmlns = "http://www.w3.org/1999/xhtml"
+				fo.setAttribute('xmlns', "http://www.w3.org/1999/xhtml");
+			})
 			let clone = el.cloneNode(true);
 			clone.style.backgroundColor = (options || {}).backgroundColor || el.style.backgroundColor;
 			const {width, height} = getDimensions(el, clone, w, h);
@@ -293,16 +284,6 @@
 				clone.setAttribute('height', height * scale);
 			}
 
-
-
-			Array.from(clone.querySelectorAll('img')).forEach(image => {
-				fileToBase64(image.src, function(dataUri){
-					image.setAttribute('src', dataUri);
-				})
-			});
-
-
-			
 			Array.from(clone.querySelectorAll('foreignObject > *')).forEach(foreignObject => {
 				if (foreignObject.tagName === 'svg')
 					foreignObject.setAttributeNS(xhtmlNs, 'xmlns', svgNs);
@@ -327,10 +308,6 @@
 				if (typeof done === 'function') done(src, width, height);
 				else return {src, width, height};
 			});
-
-
-
-			
 		});
 	};
 
@@ -340,9 +317,41 @@
 			var src = _ref5.src;
 			//src = src.replace(/(?<!<svg[^>]+)xmlns[^ >]+/gi, "")
 			src = src.replace(/(<img[^>]+)>/gi, "$1 ></img>");
-			console.log("src: ", src);
-			console.log("data:image/svg+xml;base64," +
-					window.btoa(reEncode(doctype + src)));
+			let url = src.match(/(?<=<img[^>]+src=")[^"]+/);
+			let imagedata = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIABAMAAAAGVsnJAAAAIVBMVEUAAAB+fX1+fX1+fX1+fX1+fX1+fX1+fX1+fX1+fX1+fX1I2PRsAAAACnRSTlMAF/ClME+Kb9vEsIrXWQAACWpJREFUeNrs3T1rVEEUBuBzs1+JlbGImkpREW6lVrqVhBBCKhESIZWCIqTSgEZSKSrCVordVrrxY/P+SouEJG7uzH7k3rBz3vf5CYe9Z87MOTNrIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiMo755fWdty931pfnjU/25EGOI73vby4akWzjPk75+IIlBtlGF4X2OUKw0kXQ/nPzrnEPUTcemWsrOYboef4RZO8wgi9uM0Gri5HsvzKXWh2MqO8yApdzjKz32txZyDGG3jNzZiEHmCPQyjGm3lNzpNHB2PqOSqKsjQns+akHtjGR2+bEKib02VyoYWJ3zYF6BxPrP7T0HSYA2jRQAwDij+DgAyD+CLYBgPgjqOHM7ljKujizfUvYVZTgmyUr66AE/XT3BKsoxSdLVD1HKXqpLoWPUZJblqQGSpPm2cgSSnPTEnSQAYizwBWU6IMl57gGIK0F5lCqr5aaLk4g3BHU8B++TeEuSvbXklJH6dJaCQ/XQN6VsI3S7VlCWqhASmMjSzhCuSE4UQVyVoPHRQBpKbCJSvy2VHRQib4looUjnOvAJVTkuqWhjRMIa6EGBrAdjs6iMu8tBVuozB9LQIYKpVAMNlGhFOZnBxdBuoVwMAWwJYEsR4V6058EmhjAlgROpQC2JLCLAkyn4zkq1bMp10IBpi3xHIoQdUnXULFfNt22UISoFOqgGMvBYB1BHE3SGkJIugMzqNw1m2abCCFpj7QRQnI0jHNgU6yBCIaz8SbCKI4E5hBCshtYxDn4adNrE0Ec6+AWwii2Qx2EMWyHMkT57481EENQCDQRQ1AI1BBDsCGeRZz7MYkLOBc/bFqtIc79wfAmYghKwV1E+e8PthHl/0yoizj3V+hyRLnvEGeIYNgM0Aegjjj33TH6ADQQ5X8/rACgGE0AWhjC+6AUfQCaiPJ/JqYAoJgCwBIA+iSoAKAYTQDoK0EFAMVoAkB/HkAfAEMUwahkB1H+Z2ToGyP0rbEtxBDMydG3x+kHJBYxhPdh4RlE+b81NIc49/Py9IOS9KOy9MPS9OPysVqYoRIeNijofkwwVgpSFILDxsXdD4vr4qSuzlqOIPdzoro+rwcU9ISGHlEJLgMsi0BoGaBZBPSUlh5To39Or4FTqHKgntQsyIJUOTDQHWLoCgVrQaY6MHQ0znEkrsfV9by+/mAh+L4+0ev6+pOVgSTAlwKKrg24vyjwj70zeXUiCMJ4jU4UPAUjbifFfU4qLpiTG6i3EHHBkwvicnI/eFJRwdxcEMlJJwpaf6XPjDGTWXq6J/Owa7763QR5PNvpqq++qu6umpds/4SkyRMA8gKKEiFcEtQHF/XJTX10VZ/dnecByBygT2/r4+v6/H76BF37z8pVTAwiTAeWSgFMETAPg7ghcNYlBeqJFqlBVBU4YyOeF7ZIGHFjxMJyYMJpbozdJJEwwv4AiE5jfwBEYYT9ARCd50Z4TVIJRqgaYMY2boD3JJg+YhWQZj2YE5ZnyEuyh2QTjpaMgGJT4IweL8UhEs8jXoJ9JJLgRvoPY67Nr7QE2CxHDzyKTzaSCeIHC8JazOdwNRO7L3BNPmXyyRsSwYXcWP/9BmbCOsmKCKCXt/HDca0AcJJSPJeSFNZHBeMsnVENBTAoGLuJvdeF/4TPJLss7gEwTV+KMLpf0srZ7LgC8Q1Ks1bKsOjVTA6f03NWgIVawvNU0DOUMZuj2v//NBSijjuRaaxvy8g6/j00DR7G3p6cC/plQjahM7bMfwMiMojpia+aeFhVy4eH2YJdJ7M/V4hHsM5itvVixBXER3M/V8jMbDA2V3MJnYqPYNfA6uf6uAmGdvV8cHFkiH5Hu/nSUohRttbQ1DAugfmfT+eFDI6HIwdPK7j8gXMcuN11cNR++SaJhwZNX8Smyyei1F/6ePtUSWklxC1eZ6xqiwnOXrry7NaxO08vnS2LaeFYSr+gb/I1aofs4L6UjtE2s7VbcwWCR1J6hlWDAHtrrUBwU0zPZMjc/AoEN8V0zdYxN78CwU05p8j6XM3kJDkR9uV0zteyDZMBOdDpy5mgtm19xUfImjMRF+BpUbSNbXlr+esGdyWNz7gMQv16SBZsGYsaoDrPLhyvjIXhY1kjdKGr329egvBxJGyI8rR7y+t4l0oIHo+kjdHWmob9eexJwRoE526N5M3RnuZ6xB+fLvzi4ZUTkcRJ6qXGofe/+7hiBqxYAie+vJI6Sr2VPeAluePVMLTgYWovPoD/+AkEY/YC54rA07OR8k5V9tkTJuSG79cFSblg6Bp7ww9ywts7EmTdrrCRPWInWdE+EeQmhtqZA50zof8XZ4q4bLPDnjEgCzwwAjLIPWHvVQh0u2zQz1typN2z85y9w0INemKFZRB5zYQnTojjQ4xtLITdimKfzoT/RagU8KoOcquIPL87W8ge8HQHGPYAxg4w7QGAHFC1B9pcCFbuAZQdULoHUHZA6R6A2QHmPSDqgXWf6wHPzEAna9D3d5REvMTkoRdk4Qu1syPo4Au12Q218UYRCiHTYTIQGVgqBnGSYHkibOdQgO2oAFASNCdCb9/PSZDxGo/HlWBZRYgWAnJBAC0EZIMAXAjIBQG0EJANAnghIBME8ELAagaB7SyCb5QCqxBY7XLAazdsTkwLAHkBxZ4AiCFeao7j2IGFxiCeDFpFKRSwGLo0p5VnhP7PGaI1LIYdNKfV47E2D5S2fjasiF+UgBoD01EQUAcuaEFEHbioBcHssLwtBlcLZytimL64oUsOMBxmGhcD8wOzviCkEE6JYUQzIGUJ4CaBJA0AJ4F0GsBqCmXbQ6CVwGI10Mr7EuxvVADrimX6Y7hZcJYHAS3xjDWO1hbMNAiBs+A0DyJnwb95ELUW/FsPohqCCS+wZQDzN2wZMBUCuMXwv4IYsS22Ou0xFgitAKyDpkoIWQcxPyBoHcR8EFsHNauENrBAvtIKiJ3hGd+xhWAiBQHnoxYnpWANsT9MsJXwVAvjOoKJK4g5ITenS6DTITMG2KUA8wMCnBNPc10XQBdAY4BmAYD7w8qIu1oLqB8AnQaua2OkQbaxON7TlJY9Lfj/HiFcLywTxg+oYXqiViA+RI3TufeKhbD/84AURVEURVEURVEURVEURVEURVEURVEURVEURVEURVEURVEURVEURfndHhyQAAAAAAj6/7ofoQIAAAAAAAAAAPwEGcG4SMHdcSkAAAAASUVORK5CYII=";
+			//src = src.replace(/\.\.\/\.\.\/images\/profile\.png/g,imagedata);
+			/*
+			function loadImage(href) {
+				return new Promise((resolve, reject) => {
+					const canvas = document.createElement('canvas');
+					const img = new Image();
+					img.crossOrigin = 'anonymous';
+					img.src = href;
+					img.onerror = () => reject(new Error(`Could not load ${href}`));
+					img.onload = () => {
+						canvas.width = img.width;
+						canvas.height = img.height;
+						canvas.getContext('2d').drawImage(img, 0, 0);
+						img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', canvas.toDataURL('image/png'));
+						resolve(true);
+					}
+				});
+			}
+			url.forEach(function (d){
+				loadImage(d).then(img => {
+					console.log("done");
+					console.log(img);
+					src = src.replace(d, img);
+				})
+			});
+			*/
+
+			
+			console.log("All done");
+			//console.log("src: ", src);
+			console.log("src printed.");
+			//console.log("data:image/svg+xml;base64," +
+			//		window.btoa(reEncode(doctype + src)));
 			return (
 				"data:image/svg+xml;base64," +
 					window.btoa(reEncode(doctype + src))
@@ -351,19 +360,6 @@
 		if (typeof done === "function") return result.then(done);
 		return result;
 	};
-	/*
-	  out$.svgAsDataUri = (el, options, done) => {
-      requireDomNode(el);
-      return out$.prepareSvg(el, options)
-      .then(({src, width, height}) => {
-      const svgXml = `data:image/svg+xml;base64,${window.btoa(reEncode(doctype+src))}`;
-      if (typeof done === 'function') {
-      done(svgXml, width, height);
-      }
-      return svgXml;
-      });
-	  };
-	*/
 	
 	out$.svgAsPngUri = (el, options, done) => {
 		requireDomNode(el);
@@ -374,7 +370,6 @@
 		} = options || {};
 
 		const convertToPng = ({src, width, height}) => {
-			console.log(src);
 			const canvas = document.createElement('canvas');
 			const context = canvas.getContext('2d');
 			const pixelRatio = window.devicePixelRatio || 1;
