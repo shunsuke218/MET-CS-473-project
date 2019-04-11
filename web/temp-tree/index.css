@@ -1,111 +1,112 @@
 
 #button {
-  position: fixed;
-  bottom: 10%;
-  width:75px;
-  height:75px;
-  border-radius: 50%;
-  border: 2px solid #f5f5f5;
-  text-align:center;
-  text-decoration:none;
-  background: #8E9E71;
-  padding: 10px 10px 0px 10px;
-}
-
-#button:hover{
-	background: #EE9E71;
-}
-
-#button > img {
-    width: 75%;
-    height: 75%;
-    margin: auto;	
-}
-
-#tree line {
-    stroke: #aaa;
-}
-
-/* Wrapper Div */
-#tree .node-div {
-    border-radius: 25px;
-    background-color: white;
-    display: block;
-	width: 100%;
-	height: 100%;
-    margin: 30px 30px 30px 30px;
-	margin-top: 30px;
-	.margin-right: auto;
-	.margin-left: auto;
-    .border: 2px solid #B19CD9;
-    padding: 5px;
-    transition: all 250ms 0s ease;
-	float: left;
-}
-
-/* Image Div */
-#tree .node-div-img{
-	.width: 100px;
-	height: 60%;
-	.padding-top: 100%;
-	position: relative;
-	margin: 10px;
-}
-
-#tree .node-profilepic {
- 	display: block;
-	border-radius: 25px;
-    background-color: white;
-	border: 5px dotted #F45E21;
-	.margin-left: auto;
-	.margin-right: auto;
-	.padding: 5px;
-	.max-width: 200x;
-	.max-height: 200px;
-	width: auto;
-	height: 100%;
-	object-fit:contain;
-	padding: 10px;
-}
-
-/* Another Div */
-#tree .node-div-inside{
-	.width: 100%;
-	margin: 10px;
-	text-align: center;
-}
-
-#tree .node-name {
-	font-style: bold;
-	font-size: 200%;
-	text-align: center;
+	position: fixed;
+	bottom: 10%;
+	width:75px;
+	height:75px;
+	border-radius: 50%;
+	border: 2px solid #f5f5f5;
+	text-align:center;
+	text-decoration:none;
 	background: #8E9E71;
-	color:white;
-	padding: 5px;
-	margin:5px;
-}
-
-#tree .node-dob {
-	text-align: center;
-	margin:5px;
-	color:#8E9E71;
-	font-size: x-large;
-}
-#tree .node-desc{
-	float: left;
-	margin: 10px;
-	padding-right: 20px;
-	padding-left: 20px;
-	font-weight: 400;
-	font-size: x-large;
-}
- 
-#tree h1 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
-#tree h3 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; }
-#tree p { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; }
-#tree blockquote { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
-#tree pre { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
-#tree body { 
-	font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
-}
-
+	padding: 10px 10px 0px 10px;
+  }
+  
+  #button:hover{
+	  background: #EE9E71;
+  }
+  
+  #button > img {
+	  width: 75%;
+	  height: 75%;
+	  margin: auto;	
+  }
+  
+  #tree line {
+	  stroke: #aaa;
+  }
+  
+  /* Wrapper Div */
+  #tree .node-div {
+	  border-radius: 25px;
+	  .background-color: white;
+	  display: block;
+	  width: 100%;
+	  height: 100%;
+	  .margin: 30px 30px 30px 30px;
+	  margin-top: 30px;
+	  .margin-right: auto;
+	  .margin-left: auto;
+	  .border: 2px solid #B19CD9;
+	  padding: 5px;
+	  transition: all 250ms 0s ease;
+	  float: left;
+  }
+  
+  /* Image Div */
+  #tree .node-div-img{
+	  .width: 100px;
+	  height: 60%;
+	  .padding-top: 100%;
+	  position: relative;
+	  margin: 10px;
+  }
+  
+  #tree .node-profilepic {
+	   display: block;
+	  border-radius: 25px;
+	  background-color: white;
+	  border: 5px dotted #F45E21;
+	  .margin-left: auto;
+	  .margin-right: auto;
+	  .padding: 5px;
+	  .max-width: 200x;
+	  .max-height: 200px;
+	  width: auto;
+	  height: 100%;
+	  object-fit:contain;
+	  padding: 10px;
+  }
+  
+  /* Another Div */
+  #tree .node-div-inside{
+	  .width: 100%;
+	  margin: 10px;
+	  text-align: center;
+  }
+  
+  #tree .node-name {
+	  font-style: bold;
+	  font-size: 200%;
+	  text-align: center;
+	  background: #8E9E71;
+	  color:white;
+	  padding: 5px;
+	  margin:5px;
+  }
+  
+  #tree .node-dob {
+	  text-align: center;
+	  margin:5px;
+	  color:#8E9E71;
+	  font-size: x-large;
+  }
+  #tree .node-desc{
+	  float: left;
+	  margin: 10px;
+	  padding-right: 20px;
+	  padding-left: 20px;
+	  font-weight: 400;
+	  font-size: x-large;
+  }
+   
+  #tree h1 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; }
+  #tree h3 { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; }
+  #tree p { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; }
+  #tree blockquote { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
+  #tree pre { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
+  #tree body { 
+	  font-family: Helvetica Neue,Helvetica,Arial,sans-serif; 
+  }
+  
+  
