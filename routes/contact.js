@@ -12,7 +12,7 @@ router.post('/', async (req, res, next) => {
 
         sgMail.setApiKey(process.env.SENDGRID_API_KEY);
         const msg = {
-            to: 'skycloud112@gmail.com',
+            to: 'cs473project.test@gmail.com',
             from: email,
             subject: 'Cs473 project contact form',
             text: emailBody,
