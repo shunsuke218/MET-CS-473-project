@@ -16,6 +16,13 @@
   "bugs": {
     "url": "https://github.com/shunsuke218/MET-CS-473-project/issues"
   },
+  "apps": [
+    {
+      "name": "family-tree",
+      "script": "node",
+      "args": "server"
+    }
+  ],
   "homepage": "https://github.com/shunsuke218/MET-CS-473-project#readme",
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
